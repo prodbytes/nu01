@@ -1,0 +1,41 @@
+version: "0.5"
+
+# `devbox services up` starts these: the dev server and a health monitor.
+# Stop with `devbox services stop`; pass --pcflags "--tui=false" when
+# there's no terminal.
+
+processes:
+  0-health-check:
+    command: bash scripts/health-check.sh
+    environment:
+      - HEALTH_CHECK_INTERVAL=${HEALTH_CHECK_INTERVAL:-15}
+      - NU01_PORT=${NU01_PORT:-8090}
+    # Start logging once the site is up, so the first line is meaningful.
+    depends_on:
+      1-site:
+        condition: process_healthy
+    availability:
+      restart: on_failure
+      backoff_seconds: 5
+
+  # http://localhost:8090/ (and /es/, /pt/, /ca/): the site built as LOCAL,
+  # rebuilt within a second of any change under site/ (scripts/dev.py).
+  # NU01_BIND_HOST: 0.0.0.0 in a container.
+  1-site:
+    command: python3 scripts/dev.py
+    environment:
+      - NU01_PORT=${NU01_PORT:-8090}
+      - NU01_BIND_HOST=${NU01_BIND_HOST:-127.0.0.1}
+      - PYTHONUNBUFFERED=1
+    readiness_probe:
+      http_get:
+        host: localhost
+        port: ${NU01_PORT:-8090}
+        path: /version.json
+      initial_delay_seconds: 1
+      period_seconds: 2
+      timeout_seconds: 5
+      failure_threshold: 30
+    availability:
+      restart: on_failure
+      backoff_seconds: 5

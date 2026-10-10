@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<!--
+	nu01.com, built on Dimension by HTML5 UP (html5up.net | @ajlkn),
+	free for personal and commercial use under the CCA 3.0 license
+	(html5up.net/license; assets/LICENSE-html5up.txt).
+
+	A template: scripts/build.py renders it once per bundle in site/i18n/,
+	replacing each placeholder (double braces) with that bundle's text
+	(English at /, the rest at /<lang>/). Edit the words in the bundles.
+-->
+<html lang="{{lang}}">
+	<head>
+		<title>{{meta.title}}</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="{{meta.description}}" />
+		<meta name="theme-color" content="#1b1f22" />
+		<link rel="canonical" href="{{canonical}}" />
+{{alternates}}
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="{{canonical}}" />
+		<meta property="og:title" content="{{meta.title}}" />
+		<meta property="og:description" content="{{meta.description}}" />
+		<meta property="og:locale" content="{{locale}}" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/nu01.css" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload" data-lang="{{lang}}" data-stage="{{stage}}">
+
+		<div id="wrapper">
+
+			<header id="header">
+				<div class="logo">
+					<span class="logo-mark">nu<b>01</b></span>
+				</div>
+				<div class="content">
+					<div class="inner">
+						<h1>{{intro.title}}</h1>
+						<p>{{intro.lede}}</p>
+						<p class="freemium">{{intro.freemium}}</p>
+						<div class="heroes" aria-live="polite" aria-label="{{hero.label}}"
+							data-pause="{{hero.pause}}" data-play="{{hero.play}}">
+							<a class="hero is-active" href="#learning" data-hero="learning"><strong>{{learning.kicker}}</strong> {{learning.title}}</a>
+							<a class="hero" href="#presence" data-hero="presence" hidden><strong>presence</strong> {{presence.title}}</a>
+							<a class="hero" href="#uplink" data-hero="uplink" hidden><strong>uplink</strong> {{uplink.title}}</a>
+							<a class="hero" href="#rbacr" data-hero="rbacr" hidden><strong>rbacr</strong> {{rbacr.title}}</a>
+							<button class="hero-pause" type="button" aria-label="{{hero.pause}}">&#10074;&#10074;</button>
+						</div>
+					</div>
+				</div>
+				<nav aria-label="{{hero.choose}}">
+					<ul>
+						<li><a href="#learning" data-hero="learning">{{learning.kicker}}</a></li>
+						<li><a href="#presence" data-hero="presence">presence</a></li>
+						<li><a href="#uplink" data-hero="uplink">uplink</a></li>
+						<li><a href="#rbacr" data-hero="rbacr">rbacr</a></li>
+					</ul>
+				</nav>
+			</header>
+
+			<div id="main">
+
+				<article id="learning">
+					<h2 class="major">{{learning.title}}</h2>
+					<span class="image main"><img src="/img/learning.svg" alt="" /></span>
+					<p>{{learning.body}}</p>
+					<ul class="actions"><li><a class="button primary" href="https://prodbytes.substack.com/">{{learning.cta}}</a></li></ul>
+				</article>
+
+				<article id="presence">
+					<h2 class="major">{{presence.title}}</h2>
+					<span class="image main"><img src="/img/presence.svg" alt="" /></span>
+					<p>{{presence.body}}</p>
+					<ul class="actions"><li><a class="button primary" href="https://presence.nu01.com/">{{presence.cta}}</a></li></ul>
+				</article>
+
+				<article id="uplink">
+					<h2 class="major">{{uplink.title}}</h2>
+					<span class="image main"><img src="/img/uplink.svg" alt="" /></span>
+					<p>{{uplink.body}}</p>
+					<pre><code>curl -fsSL https://sh.uplink.nu01.com | sh -s -- https://nu01.com</code></pre>
+				</article>
+
+				<article id="rbacr">
+					<h2 class="major">{{rbacr.title}}</h2>
+					<span class="image main"><img src="/img/rbacr.svg" alt="" /></span>
+					<p>{{rbacr.body}}</p>
+					<ul class="actions"><li><a class="button primary" href="https://rbacr.nu01.com/">{{rbacr.cta}}</a></li></ul>
+				</article>
+
+			</div>
+
+			<footer id="footer">
+				<ul class="langs" aria-label="{{nav.language}}">
+{{languages}}
+				</ul>
+				<p class="copyright">&copy; nu01 · <a href="https://prodbytes.substack.com/">prodbytes</a> · {{footer.design}}: <a href="https://html5up.net">HTML5 UP</a> · <span id="version"></span></p>
+			</footer>
+
+		</div>
+
+		<div id="bg"></div>
+
+		<script src="/assets/js/jquery.min.js"></script>
+		<script src="/assets/js/browser.min.js"></script>
+		<script src="/assets/js/breakpoints.min.js"></script>
+		<script src="/assets/js/util.js"></script>
+		<script src="/assets/js/main.js"></script>
+		<script src="/assets/js/nu01.js"></script>
+
+	</body>
+</html>

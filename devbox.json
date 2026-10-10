@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.17.5/.schema/devbox.schema.json",
+  "packages": {
+    "python": "latest",
+    "awscli2": "latest",
+    "gh": "latest",
+    "curl": "latest",
+    "gnumake": "latest",
+    "process-compose": "latest"
+  },
+  "shell": {
+    "init_hook": [
+      "echo 'nu01: `devbox services up` starts the dev server on http://localhost:8090/'"
+    ],
+    "scripts": {
+      "dev": "devbox services up",
+      "build": "bash scripts/build.sh",
+      "rc": "bash scripts/release-rc.sh",
+      "ga": "bash scripts/release-ga.sh"
+    }
+  }
+}

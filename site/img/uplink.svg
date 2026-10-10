@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none">
+  <rect x="40" y="40" width="400" height="280" rx="16" fill="#0a0c11" stroke="#2b3447" stroke-width="3"/>
+  <g fill="#2b3447"><circle cx="66" cy="64" r="6"/><circle cx="86" cy="64" r="6"/><circle cx="106" cy="64" r="6"/></g>
+  <g font-family="Menlo,Consolas,monospace" font-size="15">
+    <text x="64" y="112" fill="#9aa4b8">$ uplink https://nu01.com</text>
+    <text x="64" y="148" fill="#7cf29c">✓ /</text><text x="64" y="176" fill="#7cf29c">✓ /es/</text>
+    <text x="64" y="204" fill="#7cf29c">✓ /pt/</text><text x="64" y="232" fill="#ff6b6b">✗ /old-page  404</text>
+    <text x="64" y="276" fill="#e9edf5">34 pages · 451 good · 1 broken</text>
+  </g>
+  <g transform="translate(372 182)" stroke-width="10" stroke-linecap="round">
+    <path d="M-34 -6a22 22 0 0 1 0-31l10-10a22 22 0 0 1 31 0" stroke="#5ab8ff"/>
+    <path d="M34 6a22 22 0 0 1 0 31l-10 10a22 22 0 0 1-31 0" stroke="#ff6b6b"/>
+    <path d="M-8 -2 6 -16M4 14l14-14" stroke="#2b3447" stroke-width="4"/>
+  </g>
+</svg>

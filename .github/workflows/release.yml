@@ -1,0 +1,79 @@
+# Builds the site and publishes it as a GitHub release.
+#
+# - *RC* tags (scripts/release-rc.sh) are released as prereleases, *GA tags
+#   (scripts/release-ga.sh) as the latest release, each with the built site
+#   as nu01-<tag>-site.zip.
+# - Pull requests build both stages (no release), so a broken template or
+#   bundle shows up before a tag does.
+name: Release
+
+on:
+  push:
+    tags:
+      - "*RC*"
+      - "*GA"
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build both stages
+        env:
+          TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+        run: |
+          python3 scripts/build.py --stage local --out dist/local
+          STAGE=rc bash scripts/build.sh
+          STAGE=prod bash scripts/build.sh
+          ! grep -rl '{{' dist/site dist/local --include='*.html'
+
+      - name: Package
+        if: github.ref_type == 'tag'
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          case "$TAG" in *RC*) stage=rc ;; *) stage=prod ;; esac
+          STAGE="$stage" bash scripts/build.sh
+          mkdir -p release
+          (cd dist/site && zip -qr "../../release/nu01-$TAG-site.zip" .)
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: github.ref_type == 'tag'
+        with:
+          name: nu01-site
+          path: release/*
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    needs: build
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: nu01-site
+          path: release
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          flags=(--title "nu01-$TAG" --generate-notes --verify-tag)
+          [[ "$TAG" != *GA ]] && flags+=(--prerelease)
+          gh release create "$TAG" "${flags[@]}" release/*

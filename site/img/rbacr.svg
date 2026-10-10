@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none">
+  <path d="M240 40 340 78v80c0 70-44 120-100 142-56-22-100-72-100-142V78z" fill="#131722" stroke="#5ab8ff" stroke-width="4"/>
+  <circle cx="240" cy="140" r="26" stroke="#7cf29c" stroke-width="8"/>
+  <path d="M240 166v62M240 200h22M240 220h16" stroke="#7cf29c" stroke-width="8" stroke-linecap="round"/>
+  <g font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="700">
+    <rect x="30" y="96" width="92" height="30" rx="15" fill="#1b2130" stroke="#2b3447"/><text x="76" y="116" text-anchor="middle" fill="#e9edf5">admin</text>
+    <rect x="22" y="146" width="108" height="30" rx="15" fill="#7cf29c"/><text x="76" y="166" text-anchor="middle" fill="#06210f">premium</text>
+    <rect x="44" y="196" width="64" height="30" rx="15" fill="#1b2130" stroke="#2b3447"/><text x="76" y="216" text-anchor="middle" fill="#e9edf5">free</text>
+    <rect x="356" y="110" width="104" height="30" rx="8" fill="#1b2130" stroke="#2b3447"/><text x="408" y="130" text-anchor="middle" fill="#9aa4b8">@nu01.com</text>
+    <rect x="352" y="170" width="112" height="44" rx="8" fill="#0a0c11" stroke="#5ab8ff" stroke-dasharray="6 4"/><text x="408" y="197" text-anchor="middle" font-family="Menlo,monospace" font-size="12" fill="#5ab8ff">7JH2-UQF5</text>
+  </g>
+  <path d="M130 161h40M346 125h-34M352 192h-40" stroke="#2b3447" stroke-width="2" stroke-dasharray="4 4"/>
+</svg>
