@@ -59,3 +59,8 @@ spec.
    AWS CLI (2.37) never matches `!Config.PrivateZone` in a query, so the
    scripts found no `nu01.com` zone and the deploy-roles stack failed
    (`HostedZoneId` None). They now test ``Config.PrivateZone==`false` ``.
+9. **Say "free access" and "premium access" instead of "freemium".** The
+   intro line and the meta description, in all four languages, now say
+   every service offers free access to everyone, and premium access is
+   included for all prodbytes members (first drafted with "role", which
+   the user dropped for "access").
