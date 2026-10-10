@@ -42,7 +42,7 @@ stack_output() { # stack_output <output key>
 
 if [[ -z "${HOSTED_ZONE_ID:-}" ]]; then
   HOSTED_ZONE_ID="$(aws route53 list-hosted-zones-by-name --dns-name nu01.com --max-items 1 \
-    --query "HostedZones[?Name=='nu01.com.' && !Config.PrivateZone].Id | [0]" --output text)"
+    --query "HostedZones[?Name=='nu01.com.' && Config.PrivateZone==\`false\`].Id | [0]" --output text)"
   HOSTED_ZONE_ID="${HOSTED_ZONE_ID#/hostedzone/}"
 fi
 if [[ ! "$HOSTED_ZONE_ID" =~ ^Z[A-Z0-9]+$ ]]; then

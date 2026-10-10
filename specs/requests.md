@@ -55,3 +55,7 @@ spec.
 7. **Link each project's GitHub repository.** The presence, uplink, rbacr
    and tabscan articles have a "Source on GitHub" button (in every
    language) to `github.com/prodbytes/<app>`, opening in a new tab.
+8. **Fix the zone lookup in bootstrap, deploy and retire-legacy.** The
+   AWS CLI (2.37) never matches `!Config.PrivateZone` in a query, so the
+   scripts found no `nu01.com` zone and the deploy-roles stack failed
+   (`HostedZoneId` None). They now test ``Config.PrivateZone==`false` ``.

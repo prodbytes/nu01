@@ -32,7 +32,7 @@ echo "    $REPO is owner $owner_id, repository $repo_id"
 
 echo "==> 2. Deploy roles (stack nu01-github-deploy)"
 zone="$(aws route53 list-hosted-zones-by-name --dns-name nu01.com --max-items 1 \
-  --query "HostedZones[?Name=='nu01.com.' && !Config.PrivateZone].Id | [0]" --output text)"
+  --query "HostedZones[?Name=='nu01.com.' && Config.PrivateZone==\`false\`].Id | [0]" --output text)"
 zone="${zone#/hostedzone/}"
 create_provider=false
 aws iam get-open-id-connect-provider --open-id-connect-provider-arn \
