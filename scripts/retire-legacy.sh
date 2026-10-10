@@ -27,7 +27,7 @@ run() { # prints, and runs only with CONFIRM=yes
 }
 
 zone="$(aws route53 list-hosted-zones-by-name --dns-name "$DOMAIN" --max-items 1 \
-  --query "HostedZones[?Name=='$DOMAIN.' && !Config.PrivateZone].Id | [0]" --output text)"
+  --query "HostedZones[?Name=='$DOMAIN.' && Config.PrivateZone==\`false\`].Id | [0]" --output text)"
 zone="${zone#/hostedzone/}"
 echo "==> zone $DOMAIN: $zone"
 
