@@ -64,3 +64,8 @@ spec.
    every service offers free access to everyone, and premium access is
    included for all prodbytes members (first drafted with "role", which
    the user dropped for "access").
+10. **Add a prodbytes link to the nav bar.** After the five heroes, the nav
+    bar links to https://prodbytes.substack.com/ in a new tab. The hero
+    script now only treats nav links with a hero as heroes. Six buttons
+    overflowed narrower screens, so the bar tightens below 900px and
+    stacks up to 640px.

@@ -27,6 +27,10 @@
 - Rotation waits while an article is open or the header is hovered or
   focused; the pause button stops and restarts it; it doesn't run at all
   with `prefers-reduced-motion`.
+- The nav bar ends with a **prodbytes** link to
+  https://prodbytes.substack.com/ (a new tab); it isn't a hero and doesn't
+  rotate. Below 900px the nav buttons are tighter, and up to 640px they
+  stack in a column (Dimension alone stacks only below 480px).
 - The nav buttons and the hero line open the articles (Dimension's
   `#learning`, `#presence`, `#uplink`, `#rbacr`, `#tabscan`); a link with one of those
   hashes opens straight on it.
