@@ -27,5 +27,6 @@
   "tabscan.title": "Scan and share guitar tabs",
   "tabscan.body": "tabscan is a document scanner made for tablature: point your phone at a page, and it straightens it, cleans it to crisp black on white, and reads the tab as editable text. Share it as a PDF, as text, or as images.",
   "tabscan.cta": "Open tabscan",
-  "footer.design": "Design"
+  "footer.design": "Design",
+  "source.cta": "Source on GitHub"
 }

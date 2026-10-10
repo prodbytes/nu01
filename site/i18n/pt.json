@@ -27,5 +27,6 @@
   "tabscan.title": "Escaneie e compartilhe tablaturas de violão",
   "tabscan.body": "O tabscan é um scanner de documentos feito para tablaturas: aponte o celular para uma página e ele a endireita, deixa tudo em preto nítido sobre branco e lê a tablatura como texto editável. Compartilhe em PDF, como texto ou como imagens.",
   "tabscan.cta": "Abrir o tabscan",
-  "footer.design": "Design"
+  "footer.design": "Design",
+  "source.cta": "Código no GitHub"
 }
