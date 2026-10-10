@@ -33,3 +33,8 @@ spec.
 2. **Run the local server on port 1415.** The dev server, the health
    monitor and the `local` build stage's origin moved from port 8090 to
    http://localhost:1415/ (still overridable with `NU01_PORT`).
+3. **Set up local records on Route 53 so local HTTPS works.** Created the
+   A record `local.nu01.com` → `127.0.0.1` in the `nu01.com` zone.
+   `scripts/local-certs.sh` makes an mkcert certificate (devbox gained
+   mkcert and openssl), and the dev server also serves
+   https://local.nu01.com:1443/; the health monitor checks it.

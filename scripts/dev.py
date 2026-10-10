@@ -2,6 +2,7 @@
 """The local dev server: builds the site, serves it, and rebuilds on change.
 
     python3 scripts/dev.py            # http://localhost:1415/
+                                      # https://local.nu01.com:1443/
 
 - Builds with scripts/build.py --stage local (pages marked LOCAL) into
   dist/dev/, then serves that folder like CloudFront does: directory URIs
@@ -11,13 +12,17 @@
   change it rebuilds into dist/dev.new/ and swaps it in, so a page is never
   half built. A failed build (e.g. a bundle missing a key) is printed and
   the last good build keeps being served.
-- Settings, from the environment: NU01_PORT (1415), NU01_BIND_HOST
-  (127.0.0.1; 0.0.0.0 in a container).
+- It also serves HTTPS on NU01_HTTPS_PORT (1443) when the certificate from
+  scripts/local-certs.sh is in certs/; local.nu01.com resolves to 127.0.0.1.
+- Settings, from the environment: NU01_PORT (1415), NU01_HTTPS_PORT (1443),
+  NU01_PUBLIC_HOST (local.nu01.com), NU01_BIND_HOST (127.0.0.1; 0.0.0.0 in
+  a container).
 """
 import functools
 import http.server
 import os
 import shutil
+import ssl
 import subprocess
 import sys
 import threading
@@ -28,7 +33,11 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "dist" / "dev"
 WATCHED = [ROOT / "site", ROOT / "site_local", ROOT / "scripts" / "build.py"]
 PORT = int(os.environ.get("NU01_PORT", "1415"))
+HTTPS_PORT = int(os.environ.get("NU01_HTTPS_PORT", "1443"))
+PUBLIC_HOST = os.environ.get("NU01_PUBLIC_HOST", "local.nu01.com")
 HOST = os.environ.get("NU01_BIND_HOST", "127.0.0.1")
+CERT = ROOT / "certs" / "local.pem"
+KEY = ROOT / "certs" / "local-key.pem"
 
 
 def snapshot():
@@ -91,10 +100,25 @@ def serve():
     server.serve_forever()
 
 
+def serve_https():
+    """HTTPS with the mkcert certificate, when scripts/local-certs.sh made one."""
+    if not (CERT.is_file() and KEY.is_file()):
+        print("no certs/local.pem; run scripts/local-certs.sh for HTTPS", flush=True)
+        return
+    handler = functools.partial(Handler, directory=str(OUT))
+    server = http.server.ThreadingHTTPServer((HOST, HTTPS_PORT), handler)
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain(CERT, KEY)
+    server.socket = context.wrap_socket(server.socket, server_side=True)
+    print(f"serving https://{PUBLIC_HOST}:{HTTPS_PORT}/", flush=True)
+    server.serve_forever()
+
+
 def main():
     if not build():
         sys.exit(1)
     threading.Thread(target=serve, daemon=True).start()
+    threading.Thread(target=serve_https, daemon=True).start()
     last = snapshot()
     try:
         while True:

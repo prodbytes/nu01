@@ -6,11 +6,13 @@
     "gh": "latest",
     "curl": "latest",
     "gnumake": "latest",
-    "process-compose": "latest"
+    "process-compose": "latest",
+    "mkcert": "latest",
+    "openssl": "latest"
   },
   "shell": {
     "init_hook": [
-      "echo 'nu01: `devbox services up` starts the dev server on http://localhost:1415/'"
+      "echo 'nu01: `devbox services up` starts the dev server on http://localhost:1415/ and https://local.nu01.com:1443/'"
     ],
     "scripts": {
       "dev": "devbox services up",
