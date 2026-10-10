@@ -8,6 +8,8 @@
   "intro.title": "nu01.com es <span class=\"accent\">LEARNWARE</span>",
   "intro.lede": "Más que apps, IA y código abierto: los sistemas de nu01 se pueden <strong>aprender</strong>. Cada uno viene con explicaciones completas en vídeo en <a href=\"https://prodbytes.substack.com/\" target=\"_blank\" rel=\"noopener\">prodbytes.substack.com</a>.",
   "intro.freemium": "Cada servicio ofrece <strong>acceso gratuito</strong> para todos, y el <strong>acceso premium</strong> está incluido para todos los miembros de prodbytes.",
+  "signup.text": "Suscríbete a prodbytes en Substack para tener acceso a todas las apps y apoyar nuestro trabajo.",
+  "signup.cta": "Suscríbete en Substack",
   "hero.label": "Sistemas de nu01",
   "hero.choose": "Elige un sistema",
   "hero.pause": "Pausar la rotación",
