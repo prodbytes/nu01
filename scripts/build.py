@@ -19,6 +19,10 @@
   over the result, a "🛠 LOCAL" prefix and badge, crawlers kept out, and
   URLs on --origin (default http://localhost:1415).
 
+- Every link to another host (other domains, even nu01.com subdomains) must
+  open in a new tab, with target="_blank" and rel="noopener", or the build
+  fails.
+
 Bundle values are trusted HTML (they live in this repository): they may
 hold inline markup such as <strong> or <a>.
 """
@@ -28,6 +32,7 @@ import json
 import re
 import shutil
 import sys
+from urllib.parse import urlparse
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -102,6 +107,22 @@ def render(template, bundle, bundles, origin, stage):
     return PLACEHOLDER.sub(replace, template)
 
 
+LINK = re.compile(r"<a\s[^>]*>", re.IGNORECASE)
+
+
+def check_external_links(page, origin, where):
+    """Fails unless every link to another host opens in a new tab."""
+    own = urlparse(origin).netloc
+    for tag in LINK.findall(page):
+        href = re.search(r'href="([^"]*)"', tag)
+        host = urlparse(href.group(1)).netloc if href else ""
+        if not host or host == own:
+            continue
+        rel = re.search(r'rel="([^"]*)"', tag)
+        if 'target="_blank"' not in tag or not rel or "noopener" not in rel.group(1).split():
+            fail(f'{where}: external link needs target="_blank" rel="noopener": {tag}')
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--stage", choices=sorted(ORIGINS), default="prod")
@@ -125,7 +146,9 @@ def main():
     for lang, bundle in bundles.items():
         target = out / path_for(lang).lstrip("/") / "index.html"
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(render(template, bundle, bundles, origin, args.stage), encoding="utf-8")
+        page = render(template, bundle, bundles, origin, args.stage)
+        check_external_links(page, origin, f"{lang} page")
+        target.write_text(page, encoding="utf-8")
 
     (out / "version.json").write_text(
         json.dumps({"version": args.version, "commit": args.commit, "stage": args.stage}) + "\n",

@@ -42,3 +42,7 @@ spec.
    the line has an icon, a short label and ✅/❌ (each language page now
    has its own 🌐); the local URLs are printed once when the monitor
    starts, not on every run.
+5. **Open external links in a new tab, and make it a rule.** Every link to
+   another host, nu01.com subdomains included, now has `target="_blank"
+   rel="noopener"` (template and bundles); the build fails on one without
+   them, and CLAUDE.md states the rule.

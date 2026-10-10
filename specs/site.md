@@ -27,6 +27,10 @@
 - The nav buttons and the hero line open the articles (Dimension's
   `#learning`, `#presence`, `#uplink`, `#rbacr`); a link with one of those
   hashes opens straight on it.
+- Links to other hosts (other domains and nu01.com subdomains, e.g. the
+  article buttons, prodbytes.substack.com, HTML5 UP) open in a new tab
+  (`target="_blank" rel="noopener"`); links within the site don't.
+  `scripts/build.py` fails the build on an external link without both.
 - The footer lists the languages, credits HTML5 UP, and shows the deployed
   version from `/version.json`.
 - On rc.nu01.com every page has an "RC" badge, a red "RC" favicon, titles
