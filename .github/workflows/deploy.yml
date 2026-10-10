@@ -1,0 +1,49 @@
+# Deploys a *GA tag to production, https://nu01.com, through
+# scripts/deploy.sh (stack nu01-web). It ends by checking that the live site
+# serves this tag's version and commit.
+#
+# A GA is tested on RC first: scripts/release-ga.sh refuses a commit without
+# an RC tag, or one https://rc.nu01.com doesn't serve.
+#
+# AWS access is keyless: GitHub's OIDC token is exchanged for the
+# nu01-github-deploy role (infra/github-deploy.yaml), which only trusts *GA
+# tag runs and may only manage the nu01-web stack, its bucket and the
+# nu01.com apex records. Its ARN is the repository variable
+# AWS_DEPLOY_ROLE_ARN.
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "*GA"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: nu01-deploy-${{ github.run_id }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy ${{ github.ref_name }}
+        env:
+          TAG: ${{ github.ref_name }}
+          HOSTED_ZONE_ID: ${{ vars.HOSTED_ZONE_ID }}
+        run: bash scripts/deploy.sh

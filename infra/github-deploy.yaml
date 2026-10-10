@@ -1,0 +1,195 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  nu01-github-deploy: lets GitHub Actions deploy the nu01.com site. A
+  production role that only *GA tag runs can assume, limited to the
+  nu01-web stack, its bucket and the nu01.com records, and a
+  release-candidate role for *RC* tag runs and manual runs from main,
+  limited to the nu01-rc-web stack, its bucket and the rc.nu01.com records.
+  Neither may touch IAM or any other stack. Deployed once, by hand (see
+  infra/README.md). The account already has GitHub's OIDC provider (from
+  presence-github-deploy); set CreateOidcProvider=true if it doesn't.
+
+Parameters:
+  GitHubRepository:
+    Type: String
+    Default: prodbytes/nu01
+    Description: owner/name of the repository whose runs may deploy
+  GitHubImmutableRepository:
+    Type: String
+    Default: prodbytes@288014477/nu01@*
+    Description: >
+      The same repository in GitHub's immutable subject form,
+      owner@<owner id>/name@<repository id>. The repository id is a
+      wildcard until it is known (gh api repos/prodbytes/nu01 --jq .id);
+      pin it then.
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Description: The nu01.com zone
+  CreateOidcProvider:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+
+Conditions:
+  CreateProvider: !Equals [!Ref CreateOidcProvider, 'true']
+
+Resources:
+  GitHubOidcProvider:
+    Type: AWS::IAM::OIDCProvider
+    Condition: CreateProvider
+    Properties:
+      Url: https://token.actions.githubusercontent.com
+      ClientIdList:
+        - sts.amazonaws.com
+
+  DeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: nu01-github-deploy
+      Description: Assumed by GitHub Actions on *GA tags to deploy https://nu01.com
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubImmutableRepository}:ref:refs/tags/*GA
+                  - !Sub repo:${GitHubRepository}:ref:refs/tags/*GA
+      Policies:
+        - PolicyName: deploy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: cloudformation:*
+                Resource: !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/nu01-web/*
+              - Effect: Allow
+                Action:
+                  - cloudformation:ValidateTemplate
+                  - cloudformation:GetTemplateSummary
+                  - cloudformation:ListStacks
+                Resource: '*'
+              - Effect: Allow
+                Action: s3:*
+                Resource:
+                  - arn:aws:s3:::nu01-web-sitebucket-*
+                  - arn:aws:s3:::nu01-web-sitebucket-*/*
+              - Effect: Allow
+                Action: cloudfront:*
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - acm:RequestCertificate
+                  - acm:DescribeCertificate
+                  - acm:DeleteCertificate
+                  - acm:ListCertificates
+                  - acm:AddTagsToCertificate
+                  - acm:ListTagsForCertificate
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - route53:ListResourceRecordSets
+                  - route53:GetHostedZone
+                Resource: !Sub arn:${AWS::Partition}:route53:::hostedzone/${HostedZoneId}
+              # Only the apex records and their ACM validation name
+              # (_<token>.nu01.com): never another subdomain's.
+              - Effect: Allow
+                Action: route53:ChangeResourceRecordSets
+                Resource: !Sub arn:${AWS::Partition}:route53:::hostedzone/${HostedZoneId}
+                Condition:
+                  ForAllValues:StringLike:
+                    route53:ChangeResourceRecordSetsNormalizedRecordNames:
+                      - nu01.com
+                      - _*.nu01.com
+              - Effect: Allow
+                Action:
+                  - route53:GetChange
+                  - route53:ListHostedZones
+                Resource: '*'
+
+  RcDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: nu01-github-deploy-rc
+      Description: Assumed by GitHub Actions on *RC* tags and manual runs from main to deploy https://rc.nu01.com
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+              StringLike:
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubImmutableRepository}:ref:refs/tags/*RC*
+                  - !Sub repo:${GitHubImmutableRepository}:ref:refs/heads/main
+                  - !Sub repo:${GitHubRepository}:ref:refs/tags/*RC*
+                  - !Sub repo:${GitHubRepository}:ref:refs/heads/main
+      Policies:
+        - PolicyName: deploy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: cloudformation:*
+                Resource: !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/nu01-rc-web/*
+              - Effect: Allow
+                Action:
+                  - cloudformation:ValidateTemplate
+                  - cloudformation:GetTemplateSummary
+                  - cloudformation:ListStacks
+                Resource: '*'
+              - Effect: Allow
+                Action: s3:*
+                Resource:
+                  - arn:aws:s3:::nu01-rc-web-sitebucket-*
+                  - arn:aws:s3:::nu01-rc-web-sitebucket-*/*
+              - Effect: Allow
+                Action: cloudfront:*
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - acm:RequestCertificate
+                  - acm:DescribeCertificate
+                  - acm:DeleteCertificate
+                  - acm:ListCertificates
+                  - acm:AddTagsToCertificate
+                  - acm:ListTagsForCertificate
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - route53:ListResourceRecordSets
+                  - route53:GetHostedZone
+                Resource: !Sub arn:${AWS::Partition}:route53:::hostedzone/${HostedZoneId}
+              - Effect: Allow
+                Action: route53:ChangeResourceRecordSets
+                Resource: !Sub arn:${AWS::Partition}:route53:::hostedzone/${HostedZoneId}
+                Condition:
+                  ForAllValues:StringLike:
+                    route53:ChangeResourceRecordSetsNormalizedRecordNames:
+                      - rc.nu01.com
+                      - _*.rc.nu01.com
+              - Effect: Allow
+                Action:
+                  - route53:GetChange
+                  - route53:ListHostedZones
+                Resource: '*'
+
+Outputs:
+  DeployRoleArn:
+    Description: Set as the repository variable AWS_DEPLOY_ROLE_ARN
+    Value: !GetAtt DeployRole.Arn
+  RcDeployRoleArn:
+    Description: Set as the repository variable AWS_DEPLOY_RC_ROLE_ARN
+    Value: !GetAtt RcDeployRole.Arn

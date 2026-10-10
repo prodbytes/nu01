@@ -1,0 +1,20 @@
+# Build output
+dist/
+
+# scripts/retire-legacy.sh backups of the old site's buckets
+legacy-backup/
+
+# Local settings
+.env
+.env.*
+.devbox/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+__pycache__/
+*.log
