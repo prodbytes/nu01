@@ -124,3 +124,16 @@ body[data-stage="local"]::after {
 	letter-spacing: 0.1em;
 	pointer-events: none;
 }
+
+/* Nav: six buttons don't fit Dimension's sizes below ~900px. Tighter
+   buttons on tablets, and Dimension's stacked column up to 640px. */
+@media screen and (max-width: 900px) {
+	#header nav ul li a { min-width: 0; padding: 0 0.8rem 0 0.9rem; letter-spacing: 0.1rem; }
+}
+@media screen and (max-width: 640px) {
+	#header nav.use-middle:after { display: none; }
+	#header nav ul { flex-direction: column; min-width: 10rem; max-width: 100%; }
+	#header nav ul li { border-left: 0; border-top: solid 1px #ffffff; }
+	#header nav ul li:first-child { border-top: 0; }
+	#header nav ul li a { height: 3rem; line-height: 3rem; width: 100%; padding: 0 1.25rem 0 1.45rem; letter-spacing: 0.2rem; }
+}

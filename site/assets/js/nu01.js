@@ -30,7 +30,7 @@
 (function () {
 	var box = document.querySelector('#header .heroes');
 	var heroes = Array.prototype.slice.call(box.querySelectorAll('.hero'));
-	var navLinks = Array.prototype.slice.call(document.querySelectorAll('#header nav a'));
+	var navLinks = Array.prototype.slice.call(document.querySelectorAll('#header nav a[data-hero]'));
 	var pause = box.querySelector('.hero-pause');
 	var header = document.getElementById('header');
 	var bg = document.getElementById('bg');
