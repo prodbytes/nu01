@@ -24,5 +24,8 @@
   "rbacr.title": "Rols per a cada app que gestiones",
   "rbacr.body": "Inicia sessió amb Google, assigna rols a una persona o a un domini sencer i reparteix vals que desbloquegen el prèmium. Les persones veuen els seus rols com a pàgines; les teves apps els llegeixen com a JSON.",
   "rbacr.cta": "Obre rbacr",
+  "tabscan.title": "Escaneja i comparteix tabulatures de guitarra",
+  "tabscan.body": "tabscan és un escàner de documents fet per a tabulatures: apunta el mòbil a una pàgina i la redreça, la neteja en negre nítid sobre blanc i llegeix la tabulatura com a text editable. Comparteix-la en PDF, com a text o com a imatges.",
+  "tabscan.cta": "Obre tabscan",
   "footer.design": "Disseny"
 }

@@ -24,5 +24,8 @@
   "rbacr.title": "Roles for every app you run",
   "rbacr.body": "Sign in with Google, grant roles to a person or a whole domain, and hand out vouchers that unlock premium. People see their roles as pages; your apps read them as JSON.",
   "rbacr.cta": "Open rbacr",
+  "tabscan.title": "Scan and share guitar tabs",
+  "tabscan.body": "tabscan is a document scanner made for tablature: point your phone at a page, and it straightens it, cleans it to crisp black on white, and reads the tab as editable text. Share it as a PDF, as text, or as images.",
+  "tabscan.cta": "Open tabscan",
   "footer.design": "Design"
 }
