@@ -5,8 +5,8 @@
 - **Title:** "nu01.com is LEARNWARE" (LEARNWARE in the accent green).
 - **Description:** more than apps, AI and open source, nu01 systems are
   learnable, with full video explanations at prodbytes.substack.com.
-- **Freemium line:** every service is freemium; premium is included for all
-  prodbytes members.
+- **Roles line:** every service has a free role for everyone and a premium
+  role, included for all prodbytes members ("freemium" isn't used).
 - **Heroes**, rotating every 7 seconds under the description, each opening
   an article with an illustration, a paragraph and a link; each app's
   article also has a "Source on GitHub" button to its repository:
