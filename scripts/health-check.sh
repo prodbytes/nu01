@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Health monitor for the dev server: every HEALTH_CHECK_INTERVAL seconds (15
-# by default), one line with the time and ✅/❌ per check. Runs via
+# Health monitor for the dev server. On start it prints the local URLs once;
+# then every HEALTH_CHECK_INTERVAL seconds (15 by default) one line: the time
+# and, per check, an icon, a short label and ✅/❌. Runs via
 # `devbox services up` (see process-compose.yaml) or standalone.
 set -uo pipefail
 
@@ -21,9 +22,11 @@ https() {
 }
 version() { curl -fs --max-time 5 "$BASE/version.json" | grep -q '"stage": "local"'; }
 
+echo "nu01 local: $BASE/ ($(for lang in $langs; do printf '/%s/ ' "$lang"; done | sed 's/ $//')) and $HTTPS/"
+
 while true; do
   line="$(date '+%Y-%m-%d %H:%M:%S') 🌐 en $(mark page / en)"
-  for lang in $langs; do line+=" $lang $(mark page "/$lang/" "$lang")"; done
+  for lang in $langs; do line+=" 🌐 $lang $(mark page "/$lang/" "$lang")"; done
   line+=" 🏷️ version $(mark version) 🔒 https $(mark https)"
   echo "$line"
   sleep "$INTERVAL"
