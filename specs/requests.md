@@ -46,3 +46,9 @@ spec.
    another host, nu01.com subdomains included, now has `target="_blank"
    rel="noopener"` (template and bundles); the build fails on one without
    them, and CLAUDE.md states the rule.
+6. **Add tabscan to the apps list, with its hero and all.** tabscan
+   (scan guitar tabs with the phone, read them as text, share them) is the
+   fifth hero: a nav button, a rotating hero line, an article with an
+   illustration (`site/img/tabscan.svg`) linking to
+   https://tabscan.nu01.com/app/, and a generated background
+   (`site/images/bg-tabscan.jpg`), in all four languages.

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360" fill="none">
+  <rect x="40" y="50" width="200" height="260" rx="6" fill="#e9edf5" transform="rotate(-6 140 180)"/>
+  <g transform="rotate(-6 140 180)" stroke="#9aa4b8" stroke-width="2">
+    <path d="M62 100h156M62 114h156M62 128h156M62 142h156M62 156h156M62 170h156"/>
+    <path d="M62 210h156M62 224h156M62 238h156M62 252h156M62 266h156M62 280h156"/>
+  </g>
+  <g transform="rotate(-6 140 180)" font-family="Menlo,monospace" font-size="12" font-weight="700" fill="#131722" text-anchor="middle">
+    <text x="88" y="118">3</text><text x="118" y="132">2</text><text x="148" y="146">0</text><text x="178" y="104">1</text><text x="200" y="160">3</text>
+    <text x="96" y="228">5</text><text x="130" y="242">7</text><text x="164" y="270">5</text><text x="196" y="214">8</text>
+  </g>
+  <rect x="270" y="40" width="160" height="290" rx="22" fill="#131722" stroke="#2b3447" stroke-width="4"/>
+  <rect x="284" y="66" width="132" height="210" rx="6" fill="#0a0c11"/>
+  <path d="M296 84h20M296 84v20M404 84h-20M404 84v20M296 258h20M296 258v-20M404 258h-20M404 258v-20" stroke="#7cf29c" stroke-width="4" stroke-linecap="round"/>
+  <g font-family="Menlo,monospace" font-size="11" fill="#7cf29c">
+    <text x="304" y="124">e|--3---</text><text x="304" y="140">B|---1--</text><text x="304" y="156">G|-0----</text>
+    <text x="304" y="188">e|-5--8-</text><text x="304" y="204">B|---7--</text><text x="304" y="220">G|--5---</text>
+  </g>
+  <circle cx="350" cy="302" r="14" stroke="#5ab8ff" stroke-width="4"/>
+  <path d="M244 180h20" stroke="#5ab8ff" stroke-width="3" stroke-dasharray="4 4"/>
+</svg>

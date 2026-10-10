@@ -16,6 +16,7 @@
   | presence | Keep an eye on the places you care for | https://presence.nu01.com/ |
   | uplink | Find every broken link | the install one-liner, `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` |
   | rbacr | Roles for every app you run | https://rbacr.nu01.com/ |
+  | tabscan | Scan and share guitar tabs | https://tabscan.nu01.com/app/ |
 
 ## Behaviour
 
@@ -25,7 +26,7 @@
   focused; the pause button stops and restarts it; it doesn't run at all
   with `prefers-reduced-motion`.
 - The nav buttons and the hero line open the articles (Dimension's
-  `#learning`, `#presence`, `#uplink`, `#rbacr`); a link with one of those
+  `#learning`, `#presence`, `#uplink`, `#rbacr`, `#tabscan`); a link with one of those
   hashes opens straight on it.
 - Links to other hosts (other domains and nu01.com subdomains, e.g. the
   article buttons, prodbytes.substack.com, HTML5 UP) open in a new tab
