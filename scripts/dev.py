@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """The local dev server: builds the site, serves it, and rebuilds on change.
 
-    python3 scripts/dev.py            # http://localhost:8090/
+    python3 scripts/dev.py            # http://localhost:1415/
 
 - Builds with scripts/build.py --stage local (pages marked LOCAL) into
   dist/dev/, then serves that folder like CloudFront does: directory URIs
@@ -11,7 +11,7 @@
   change it rebuilds into dist/dev.new/ and swaps it in, so a page is never
   half built. A failed build (e.g. a bundle missing a key) is printed and
   the last good build keeps being served.
-- Settings, from the environment: NU01_PORT (8090), NU01_BIND_HOST
+- Settings, from the environment: NU01_PORT (1415), NU01_BIND_HOST
   (127.0.0.1; 0.0.0.0 in a container).
 """
 import functools
@@ -27,7 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "dist" / "dev"
 WATCHED = [ROOT / "site", ROOT / "site_local", ROOT / "scripts" / "build.py"]
-PORT = int(os.environ.get("NU01_PORT", "8090"))
+PORT = int(os.environ.get("NU01_PORT", "1415"))
 HOST = os.environ.get("NU01_BIND_HOST", "127.0.0.1")
 
 

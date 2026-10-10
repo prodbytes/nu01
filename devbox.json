@@ -10,7 +10,7 @@
   },
   "shell": {
     "init_hook": [
-      "echo 'nu01: `devbox services up` starts the dev server on http://localhost:8090/'"
+      "echo 'nu01: `devbox services up` starts the dev server on http://localhost:1415/'"
     ],
     "scripts": {
       "dev": "devbox services up",

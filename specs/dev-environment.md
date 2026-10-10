@@ -6,7 +6,7 @@
 
   | Process | What it does |
   |---|---|
-  | `1-site` | [scripts/dev.py](../scripts/dev.py): the dev server on http://localhost:8090/ (`NU01_PORT`), bound to `127.0.0.1` (`NU01_BIND_HOST`; `0.0.0.0` in a container). Ready when `/version.json` answers |
+  | `1-site` | [scripts/dev.py](../scripts/dev.py): the dev server on http://localhost:1415/ (`NU01_PORT`), bound to `127.0.0.1` (`NU01_BIND_HOST`; `0.0.0.0` in a container). Ready when `/version.json` answers |
   | `0-health-check` | [scripts/health-check.sh](../scripts/health-check.sh): every 15 s (`HEALTH_CHECK_INTERVAL`), one line with ✅/❌ for each language page (`<html lang>` must match) and for `/version.json` reporting the `local` stage. Starts once `1-site` is ready |
 
   `devbox services stop` stops them; `devbox run dev` is the same as
