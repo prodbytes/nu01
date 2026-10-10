@@ -30,3 +30,6 @@ spec.
    (process-compose: `scripts/dev.py` on http://localhost:8090/, rebuilt on
    every change, pages marked LOCAL) and a health monitor. The build gained
    a `local` stage.
+2. **Run the local server on port 1415.** The dev server, the health
+   monitor and the `local` build stage's origin moved from port 8090 to
+   http://localhost:1415/ (still overridable with `NU01_PORT`).

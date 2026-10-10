@@ -16,7 +16,7 @@ Portuguese and Catalan.
 ## Working on it
 
 ```sh
-devbox services up           # dev server on http://localhost:8090/ + health monitor
+devbox services up           # dev server on http://localhost:1415/ + health monitor
 ```
 
 The dev server ([process-compose.yaml](process-compose.yaml),

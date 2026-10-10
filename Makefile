@@ -1,7 +1,7 @@
 # Shortcuts for the scripts in scripts/.
 #
 #   make build     dist/site/ for production (STAGE=rc for the release candidate)
-#   make serve     the dev server on http://localhost:8090/ (rebuilds on change)
+#   make serve     the dev server on http://localhost:1415/ (rebuilds on change)
 #   make rc        tag and push a release candidate (deploys rc.nu01.com)
 #   make ga        tag and push GA (deploys nu01.com; needs a live, tested RC)
 #   make clean     remove dist/

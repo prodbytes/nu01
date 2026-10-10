@@ -17,7 +17,7 @@
   titles get a "🧪 RC" prefix, and robots.txt keeps crawlers out.
 - --stage local is the dev server's build (scripts/dev.py): site_local/
   over the result, a "🛠 LOCAL" prefix and badge, crawlers kept out, and
-  URLs on --origin (default http://localhost:8090).
+  URLs on --origin (default http://localhost:1415).
 
 Bundle values are trusted HTML (they live in this repository): they may
 hold inline markup such as <strong> or <a>.
@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 I18N = SITE / "i18n"
 DEFAULT_LANG = "en"
-ORIGINS = {"prod": "https://nu01.com", "rc": "https://rc.nu01.com", "local": "http://localhost:8090"}
+ORIGINS = {"prod": "https://nu01.com", "rc": "https://rc.nu01.com", "local": "http://localhost:1415"}
 PREFIXES = {"rc": "🧪 RC · ", "local": "🛠 LOCAL · "}
 PLACEHOLDER = re.compile(r"\{\{([a-zA-Z0-9_.]+)\}\}")
 

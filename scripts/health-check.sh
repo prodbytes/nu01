@@ -5,7 +5,7 @@
 set -uo pipefail
 
 INTERVAL="${HEALTH_CHECK_INTERVAL:-15}"
-BASE="http://localhost:${NU01_PORT:-8090}"
+BASE="http://localhost:${NU01_PORT:-1415}"
 cd "$(dirname "$0")/.."
 langs="$(find site/i18n -name '*.json' ! -name en.json -exec basename {} .json \; | sort | tr '\n' ' ')"
 

@@ -29,7 +29,7 @@ Do not commit or push code that has not passed both checks.
   [devbox.json](devbox.json); enter it with `devbox shell`.
 - `devbox services up` starts the processes in
   [process-compose.yaml](process-compose.yaml): the dev server
-  (http://localhost:8090/) and the health monitor
+  (http://localhost:1415/) and the health monitor
   ([scripts/health-check.sh](scripts/health-check.sh)); stop with
   `devbox services stop`. In non-interactive contexts pass
   `--pcflags "--tui=false"`.
