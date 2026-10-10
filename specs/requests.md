@@ -52,3 +52,6 @@ spec.
    illustration (`site/img/tabscan.svg`) linking to
    https://tabscan.nu01.com/app/, and a generated background
    (`site/images/bg-tabscan.jpg`), in all four languages.
+7. **Link each project's GitHub repository.** The presence, uplink, rbacr
+   and tabscan articles have a "Source on GitHub" button (in every
+   language) to `github.com/prodbytes/<app>`, opening in a new tab.

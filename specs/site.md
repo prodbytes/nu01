@@ -8,15 +8,16 @@
 - **Freemium line:** every service is freemium; premium is included for all
   prodbytes members.
 - **Heroes**, rotating every 7 seconds under the description, each opening
-  an article with an illustration, a paragraph and a link:
+  an article with an illustration, a paragraph and a link; each app's
+  article also has a "Source on GitHub" button to its repository:
 
-  | Hero | Headline (English) | Link |
-  |---|---|---|
-  | Learnware | More than AI: people learning | https://prodbytes.substack.com/ |
-  | presence | Keep an eye on the places you care for | https://presence.nu01.com/ |
-  | uplink | Find every broken link | the install one-liner, `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` |
-  | rbacr | Roles for every app you run | https://rbacr.nu01.com/ |
-  | tabscan | Scan and share guitar tabs | https://tabscan.nu01.com/app/ |
+  | Hero | Headline (English) | Link | Repository |
+  |---|---|---|---|
+  | Learnware | More than AI: people learning | https://prodbytes.substack.com/ | — |
+  | presence | Keep an eye on the places you care for | https://presence.nu01.com/ | https://github.com/prodbytes/presence |
+  | uplink | Find every broken link | the install one-liner, `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` | https://github.com/prodbytes/uplink |
+  | rbacr | Roles for every app you run | https://rbacr.nu01.com/ | https://github.com/prodbytes/rbacr |
+  | tabscan | Scan and share guitar tabs | https://tabscan.nu01.com/app/ | https://github.com/prodbytes/tabscan |
 
 ## Behaviour
 

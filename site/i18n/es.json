@@ -27,5 +27,6 @@
   "tabscan.title": "Escanea y comparte tablaturas de guitarra",
   "tabscan.body": "tabscan es un escáner de documentos hecho para tablaturas: apunta el móvil a una página y la endereza, la limpia en negro nítido sobre blanco y lee la tablatura como texto editable. Compártela en PDF, como texto o como imágenes.",
   "tabscan.cta": "Abrir tabscan",
-  "footer.design": "Diseño"
+  "footer.design": "Diseño",
+  "source.cta": "Código en GitHub"
 }
