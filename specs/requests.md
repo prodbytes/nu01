@@ -38,3 +38,7 @@ spec.
    `scripts/local-certs.sh` makes an mkcert certificate (devbox gained
    mkcert and openssl), and the dev server also serves
    https://local.nu01.com:1443/; the health monitor checks it.
+4. **One health-check line per run, and the URLs once.** Every check on
+   the line has an icon, a short label and ✅/❌ (each language page now
+   has its own 🌐); the local URLs are printed once when the monitor
+   starts, not on every run.

@@ -8,7 +8,7 @@
   |---|---|
   | `2-local-certs` | [scripts/local-certs.sh](../scripts/local-certs.sh): the mkcert certificate for `local.nu01.com`, `localhost`, `127.0.0.1` and `::1` in `certs/` (git-ignored, key mode 600), made only when missing, within 30 days of expiry, missing a name, or not signed by this machine's mkcert CA |
   | `1-site` | [scripts/dev.py](../scripts/dev.py): the dev server on http://localhost:1415/ (`NU01_PORT`) and https://local.nu01.com:1443/ (`NU01_HTTPS_PORT`, `NU01_PUBLIC_HOST`; only when the certificate exists), bound to `127.0.0.1` (`NU01_BIND_HOST`; `0.0.0.0` in a container). Starts after `2-local-certs`; ready when `/version.json` answers |
-  | `0-health-check` | [scripts/health-check.sh](../scripts/health-check.sh): every 15 s (`HEALTH_CHECK_INTERVAL`), one line with ✅/❌ for each language page (`<html lang>` must match), for `/version.json` reporting the `local` stage, and for the same over HTTPS with a verified certificate. Starts once `1-site` is ready |
+  | `0-health-check` | [scripts/health-check.sh](../scripts/health-check.sh): prints the local URLs (HTTP with each language's path, and HTTPS) once at start, then every 15 s (`HEALTH_CHECK_INTERVAL`) one line: the time and, per check, an icon, a short label and ✅/❌ — `🌐 <lang>` for each language page (`<html lang>` must match), `🏷️ version` for `/version.json` reporting the `local` stage, and `🔒 https` for the same over HTTPS with a verified certificate. Starts once `1-site` is ready |
 
   `devbox services stop` stops them; `devbox run dev` is the same as
   `devbox services up`. Without devbox, `bash scripts/serve.sh` (or `make
