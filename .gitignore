@@ -4,6 +4,9 @@ dist/
 # scripts/retire-legacy.sh backups of the old site's buckets
 legacy-backup/
 
+# Local HTTPS certificate and key (scripts/local-certs.sh)
+certs/
+
 # Local settings
 .env
 .env.*

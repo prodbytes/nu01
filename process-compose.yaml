@@ -1,6 +1,7 @@
 version: "0.5"
 
-# `devbox services up` starts these: the dev server and a health monitor.
+# `devbox services up` starts these: the local certificate, the dev server
+# and a health monitor.
 # Stop with `devbox services stop`; pass --pcflags "--tui=false" when
 # there's no terminal.
 
@@ -10,6 +11,8 @@ processes:
     environment:
       - HEALTH_CHECK_INTERVAL=${HEALTH_CHECK_INTERVAL:-15}
       - NU01_PORT=${NU01_PORT:-1415}
+      - NU01_HTTPS_PORT=${NU01_HTTPS_PORT:-1443}
+      - NU01_PUBLIC_HOST=${NU01_PUBLIC_HOST:-local.nu01.com}
     # Start logging once the site is up, so the first line is meaningful.
     depends_on:
       1-site:
@@ -18,13 +21,25 @@ processes:
       restart: on_failure
       backoff_seconds: 5
 
-  # http://localhost:1415/ (and /es/, /pt/, /ca/): the site built as LOCAL,
-  # rebuilt within a second of any change under site/ (scripts/dev.py).
+  # The mkcert certificate for local.nu01.com, made only when missing or stale.
+  2-local-certs:
+    command: bash scripts/local-certs.sh
+    environment:
+      - NU01_PUBLIC_HOST=${NU01_PUBLIC_HOST:-local.nu01.com}
+
+  # http://localhost:1415/ (and /es/, /pt/, /ca/) and
+  # https://local.nu01.com:1443/: the site built as LOCAL, rebuilt within a
+  # second of any change under site/ (scripts/dev.py).
   # NU01_BIND_HOST: 0.0.0.0 in a container.
   1-site:
     command: python3 scripts/dev.py
+    depends_on:
+      2-local-certs:
+        condition: process_completed_successfully
     environment:
       - NU01_PORT=${NU01_PORT:-1415}
+      - NU01_HTTPS_PORT=${NU01_HTTPS_PORT:-1443}
+      - NU01_PUBLIC_HOST=${NU01_PUBLIC_HOST:-local.nu01.com}
       - NU01_BIND_HOST=${NU01_BIND_HOST:-127.0.0.1}
       - PYTHONUNBUFFERED=1
     readiness_probe:
