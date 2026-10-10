@@ -34,6 +34,14 @@ any text changes it in **all** bundles in the same PR; the build fails when
 their keys differ. Never put words in [site/index.html](site/index.html)
 itself.
 
+## External links open in a new tab
+
+A link to any other host (another domain, or even a nu01.com subdomain
+such as presence.nu01.com) opens in a new tab: `target="_blank"
+rel="noopener"`, in [site/index.html](site/index.html) and in the bundles
+alike. Links within the site (the language links, `#article` hashes) stay
+in the same tab. The build fails on an external link without both.
+
 ## RC before GA
 
 A release is tested on **https://rc.nu01.com** before it reaches
