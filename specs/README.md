@@ -9,7 +9,7 @@ shaped it.
 
 https://nu01.com is one static page that says what nu01 is
 (**LEARNWARE**: learnable systems, explained on video at
-prodbytes.substack.com, a free role for everyone and a premium role for
+prodbytes.substack.com, free access for everyone and premium access for
 prodbytes members) and
 rotates through nu01's systems.
 

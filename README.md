@@ -2,9 +2,9 @@
 
 **nu01.com is LEARNWARE.** More than apps, AI and open source: nu01 systems
 are learnable, with full video explanations at
-[prodbytes.substack.com](https://prodbytes.substack.com/). Every service has
-a free role for everyone and a premium role, included for all prodbytes
-members.
+[prodbytes.substack.com](https://prodbytes.substack.com/). Every service
+offers free access to everyone, and premium access is included for all
+prodbytes members.
 
 This repository is the website at https://nu01.com: one static page that
 rotates through five heroes (Learnware, [presence](https://presence.nu01.com),
