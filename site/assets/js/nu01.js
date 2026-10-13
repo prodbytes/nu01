@@ -25,7 +25,7 @@
 
 // The heroes: the line under the description, the background and the
 // highlighted nav button rotate every 7 s through Learnware, presence,
-// uplink, rbacr and tabscan. Rotation waits while an article is open or the header
+// uplink, rbacr, tabscan and grigri. Rotation waits while an article is open or the header
 // is hovered or focused, and stops when paused or with reduced motion.
 (function () {
 	var box = document.querySelector('#header .heroes');

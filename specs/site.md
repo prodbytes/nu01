@@ -22,6 +22,7 @@
   | uplink | Find every broken link | the install one-liner, `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` | https://github.com/prodbytes/uplink |
   | rbacr | Roles for every app you run | https://rbacr.nu01.com/ | https://github.com/prodbytes/rbacr |
   | tabscan | Scan and share guitar tabs | https://tabscan.nu01.com/app/ | https://github.com/prodbytes/tabscan |
+  | grigri | Find someone to climb with | https://grigri.nu01.com/ | https://github.com/prodbytes/grigri |
 
 ## Behaviour
 
@@ -32,10 +33,10 @@
   with `prefers-reduced-motion`.
 - The nav bar ends with a **prodbytes** link to
   https://prodbytes.substack.com/ (a new tab); it isn't a hero and doesn't
-  rotate. Below 900px the nav buttons are tighter, and up to 640px they
+  rotate. Below 1000px the nav buttons are tighter, and up to 640px they
   stack in a column (Dimension alone stacks only below 480px).
 - The nav buttons and the hero line open the articles (Dimension's
-  `#learning`, `#presence`, `#uplink`, `#rbacr`, `#tabscan`); a link with one of those
+  `#learning`, `#presence`, `#uplink`, `#rbacr`, `#tabscan`, `#grigri`); a link with one of those
   hashes opens straight on it.
 - Links to other hosts (other domains and nu01.com subdomains, e.g. the
   article buttons, prodbytes.substack.com, HTML5 UP) open in a new tab

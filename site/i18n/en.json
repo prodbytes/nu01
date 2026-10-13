@@ -29,6 +29,9 @@
   "tabscan.title": "Scan and share guitar tabs",
   "tabscan.body": "tabscan is a document scanner made for tablature: point your phone at a page, and it straightens it, cleans it to crisp black on white, and reads the tab as editable text. Share it as a PDF, as text, or as images.",
   "tabscan.cta": "Open tabscan",
+  "grigri.title": "Find someone to climb with",
+  "grigri.body": "grigri is matchmaking for climbing: swipe on plans (what, where, when, which grades), not on people. When everyone in a plan's group says yes to you, it's a match, and you climb together, with a group chat.",
+  "grigri.cta": "Open grigri",
   "footer.design": "Design",
   "source.cta": "Source on GitHub"
 }

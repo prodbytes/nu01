@@ -7,9 +7,10 @@ offers free access to everyone, and premium access is included for all
 prodbytes members.
 
 This repository is the website at https://nu01.com: one static page that
-rotates through five heroes (Learnware, [presence](https://presence.nu01.com),
-uplink, [rbacr](https://rbacr.nu01.com) and
-[tabscan](https://tabscan.nu01.com/app/)), in English (default), Spanish,
+rotates through six heroes (Learnware, [presence](https://presence.nu01.com),
+uplink, [rbacr](https://rbacr.nu01.com),
+[tabscan](https://tabscan.nu01.com/app/) and
+[grigri](https://grigri.nu01.com/)), in English (default), Spanish,
 Portuguese and Catalan.
 
 - Production: **https://nu01.com** (`*GA` tags)

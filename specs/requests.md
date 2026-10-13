@@ -73,3 +73,15 @@ spec.
     us.** Under the access line, a sentence says so and a "Sign up on
     Substack" button links to https://prodbytes.substack.com/subscribe, in
     all four languages.
+
+## 2026-10-13
+
+1. **Feature grigri, and publish it all.** grigri (matchmaking for climbing:
+   swipe on plans, match when the whole group says yes, climb together) is
+   the sixth hero: a nav button, a rotating hero line, an article with an
+   illustration (`site/img/grigri.svg`), an "Open grigri" button to
+   https://grigri.nu01.com/ and a "Source on GitHub" button to
+   `prodbytes/grigri`, and a generated background
+   (`site/images/bg-grigri.jpg`), in all four languages. With seven nav
+   buttons, the tighter bar now starts below 1000px (was 900px). Published with the
+   sign-up call (PR #11) through RC to GA.
