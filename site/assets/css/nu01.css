@@ -129,9 +129,9 @@ body[data-stage="local"]::after {
 	pointer-events: none;
 }
 
-/* Nav: six buttons don't fit Dimension's sizes below ~900px. Tighter
+/* Nav: seven buttons don't fit Dimension's sizes below ~1000px. Tighter
    buttons on tablets, and Dimension's stacked column up to 640px. */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
 	#header nav ul li a { min-width: 0; padding: 0 0.8rem 0 0.9rem; letter-spacing: 0.1rem; }
 }
 @media screen and (max-width: 640px) {

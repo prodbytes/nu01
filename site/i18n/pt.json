@@ -29,6 +29,9 @@
   "tabscan.title": "Escaneie e compartilhe tablaturas de violão",
   "tabscan.body": "O tabscan é um scanner de documentos feito para tablaturas: aponte o celular para uma página e ele a endireita, deixa tudo em preto nítido sobre branco e lê a tablatura como texto editável. Compartilhe em PDF, como texto ou como imagens.",
   "tabscan.cta": "Abrir o tabscan",
+  "grigri.title": "Encontre alguém para escalar",
+  "grigri.body": "O grigri é matchmaking para escalada: deslize por planos (o quê, onde, quando e quais graus), não por pessoas. Quando todo o grupo de um plano diz sim para você, é um match, e vocês escalam juntos, com um chat em grupo.",
+  "grigri.cta": "Abrir o grigri",
   "footer.design": "Design",
   "source.cta": "Código no GitHub"
 }
