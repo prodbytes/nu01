@@ -8,6 +8,9 @@
 - **Access line:** every service offers free access to everyone, and
   premium access is included for all prodbytes members (neither
   "freemium" nor "role" is used).
+- **Sign-up call:** "Sign up for prodbytes on Substack to get access to all
+  the apps and support our work", with a "Sign up on Substack" button to
+  https://prodbytes.substack.com/subscribe (a new tab).
 - **Heroes**, rotating every 7 seconds under the description, each opening
   an article with an illustration, a paragraph and a link; each app's
   article also has a "Source on GitHub" button to its repository:

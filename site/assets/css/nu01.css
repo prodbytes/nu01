@@ -18,6 +18,10 @@
 #header .content .inner h1 .accent { color: #7cf29c; }
 #header .content p.freemium { font-size: 0.75rem; opacity: 0.85; }
 
+/* The sign-up call: a line and a Substack button under the access line. */
+#header .content p.signup { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+#header .content p.signup .button { margin: 0; }
+
 /* The rotating hero line, under the description. */
 #header .heroes {
 	display: flex;

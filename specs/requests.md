@@ -69,3 +69,7 @@ spec.
     script now only treats nav links with a hero as heroes. Six buttons
     overflowed narrower screens, so the bar tightens below 900px and
     stacks up to 640px.
+11. **Make it clear you can sign up, get access to all the apps and support
+    us.** Under the access line, a sentence says so and a "Sign up on
+    Substack" button links to https://prodbytes.substack.com/subscribe, in
+    all four languages.
