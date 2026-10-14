@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  nu01-dns: the apps' records in the nu01.com zone, replacing their
+  delegated subzones (grigri., tabscan., rbacr. and uplink.nu01.com, each a
+  separate $0.50/month hosted zone). One Migrate<Project> switch per
+  project, turned on by scripts/migrate-subzone.sh right after it removes
+  that project's NS delegation from nu01.com. Holds the CloudFront aliases,
+  the local.* loopback names and rbacr's CAA record; the ACM validation
+  CNAMEs are copied by the migration script and later owned by each
+  project's certificate stack. Deployed by hand (scripts/deploy-dns.sh).
+
+Parameters:
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Default: Z04838091YTBIM6PNI1XK
+    Description: The nu01.com zone (nu01-route53-zone)
+  MigrateGrigri:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  MigrateTabscan:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  MigrateRbacr:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  MigrateUplink:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
+  # Each host's CloudFront distribution domain name (defaults: the live
+  # values on 2026-10-14). A changed distribution must be passed explicitly:
+  # an update keeps a parameter's previous value.
+  GrigriDistribution:
+    Type: String
+    Default: d2psby6crjtnpu.cloudfront.net
+  GrigriRcDistribution:
+    Type: String
+    Default: d50j1qrcefc6d.cloudfront.net
+  TabscanDistribution:
+    Type: String
+    Default: dsoen0uzo6zi8.cloudfront.net
+  TabscanRcDistribution:
+    Type: String
+    Default: d1vw5noh5aihur.cloudfront.net
+  RbacrDistribution:
+    Type: String
+    Default: d3oqtadea79agl.cloudfront.net
+  RbacrRcDistribution:
+    Type: String
+    Default: d23p8ha7k0selu.cloudfront.net
+  UplinkDistribution:
+    Type: String
+    Default: dkws024iwx3in.cloudfront.net
+  UplinkRcDistribution:
+    Type: String
+    Default: d302gaelqe85ho.cloudfront.net
+  UplinkShDistribution:
+    Type: String
+    Default: d2deb1fjt1gs4u.cloudfront.net
+
+Conditions:
+  Grigri: !Equals [!Ref MigrateGrigri, 'true']
+  Tabscan: !Equals [!Ref MigrateTabscan, 'true']
+  Rbacr: !Equals [!Ref MigrateRbacr, 'true']
+  Uplink: !Equals [!Ref MigrateUplink, 'true']
+
+# Z2FDTNDATAQYW2 is CloudFront's alias hosted zone (the same everywhere).
+Resources:
+  # Free no-op, so the stack can exist before any project is migrated (a
+  # stack needs at least one resource).
+  Placeholder:
+    Type: AWS::CloudFormation::WaitConditionHandle
+
+  GrigriRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: Grigri
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - {Name: grigri.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref GrigriDistribution, EvaluateTargetHealth: false}}
+        - {Name: grigri.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref GrigriDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.grigri.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref GrigriRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.grigri.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref GrigriRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: local.grigri.nu01.com, Type: A, TTL: '3600', ResourceRecords: [127.0.0.1]}
+        - {Name: local.grigri.nu01.com, Type: AAAA, TTL: '3600', ResourceRecords: ['::1']}
+
+  TabscanRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: Tabscan
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - {Name: tabscan.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanDistribution, EvaluateTargetHealth: false}}
+        - {Name: tabscan.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.tabscan.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.tabscan.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: local.tabscan.nu01.com, Type: A, TTL: '300', ResourceRecords: [127.0.0.1]}
+        - {Name: local.tabscan.nu01.com, Type: AAAA, TTL: '300', ResourceRecords: ['::1']}
+
+  RbacrRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: Rbacr
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - {Name: rbacr.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref RbacrDistribution, EvaluateTargetHealth: false}}
+        - {Name: rbacr.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref RbacrDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.rbacr.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref RbacrRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.rbacr.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref RbacrRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: local.rbacr.nu01.com, Type: A, TTL: '3600', ResourceRecords: [127.0.0.1]}
+        # Only Amazon (ACM) may issue certificates for rbacr's names.
+        - {Name: rbacr.nu01.com, Type: CAA, TTL: '3600', ResourceRecords: ['0 issue "amazon.com"', '0 issuewild ";"']}
+
+  UplinkRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: Uplink
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - {Name: uplink.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkDistribution, EvaluateTargetHealth: false}}
+        - {Name: uplink.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.uplink.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.uplink.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: sh.uplink.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkShDistribution, EvaluateTargetHealth: false}}
+        - {Name: sh.uplink.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkShDistribution, EvaluateTargetHealth: false}}

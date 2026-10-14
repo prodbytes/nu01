@@ -1,0 +1,48 @@
+# nu01-route53-gmail: Google Workspace (Gmail) MX and SPF records for
+# nu01.com. Ported unchanged from prodbytes/dsp (samples/route53-gmail,
+# deployed by gitops/nu01/nu01-deploy.sh); deployed by scripts/deploy-dns.sh
+# with TenantId=nu01. It imports the nu01-route53-zone exports.
+#
+# DKIM is not here on purpose: its key is generated per domain in the Google
+# Admin console (Apps > Google Workspace > Gmail > Authenticate email), so the
+# TXT record it asks for has to be added by hand afterwards.
+Description: >
+  Google Workspace (Gmail) mail records for the domain of the hosted zone
+  exported by the route53-zone stack of the same TenantId.
+
+Parameters:
+  TenantId:
+    Type: String
+    Default: default
+    Description: Prefix for import names, matching the route53-zone stack
+
+Resources:
+  # One MX record is all current Google Workspace domains need; the five
+  # ASPMX.L.GOOGLE.COM hosts are the legacy set and are not required for
+  # domains set up today.
+  MailExchange:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId:
+        Fn::ImportValue: !Sub "${TenantId}-HostedZoneId"
+      Name:
+        Fn::ImportValue: !Sub "${TenantId}-HostedZoneName"
+      Type: MX
+      TTL: 3600
+      ResourceRecords:
+        - 1 smtp.google.com
+
+  # SPF authorises Google's servers to send as this domain. A domain may have
+  # only one SPF record, so this is the apex TXT record - merge any other
+  # sender into this same string rather than adding a second one.
+  SenderPolicy:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId:
+        Fn::ImportValue: !Sub "${TenantId}-HostedZoneId"
+      Name:
+        Fn::ImportValue: !Sub "${TenantId}-HostedZoneName"
+      Type: TXT
+      TTL: 3600
+      ResourceRecords:
+        - '"v=spf1 include:_spf.google.com ~all"'

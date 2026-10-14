@@ -24,8 +24,8 @@ export AWS_REGION="${AWS_REGION:-us-east-1}"
 export AWS_DEFAULT_REGION="$AWS_REGION"
 STAGE="${STAGE:-prod}"
 case "$STAGE" in
-  prod) STACK=nu01-web; DOMAIN=nu01.com ;;
-  rc) STACK=nu01-rc-web; DOMAIN=rc.nu01.com ;;
+  prod) STACK=nu01-web; DOMAIN=nu01.com; TENANCY=GA ;;
+  rc) STACK=nu01-rc-web; DOMAIN=rc.nu01.com; TENANCY=RC ;;
   *) echo "error: STAGE must be prod or rc (got '$STAGE')" >&2; exit 2 ;;
 esac
 
@@ -50,10 +50,12 @@ if [[ ! "$HOSTED_ZONE_ID" =~ ^Z[A-Z0-9]+$ ]]; then
   exit 1
 fi
 
-# 2. The stack
+# 2. The stack, tagged for cost allocation (CloudFormation copies the
+# stack's tags to its resources)
 echo "==> deploying $STACK"
 aws cloudformation deploy --stack-name "$STACK" --template-file infra/site.yaml \
   --parameter-overrides "DomainName=$DOMAIN" "HostedZoneId=$HOSTED_ZONE_ID" \
+  --tags project=nu01 "tenancy=$TENANCY" \
   --no-fail-on-empty-changeset
 bucket="$(stack_output SiteBucketName)"
 distribution="$(stack_output DistributionId)"

@@ -43,6 +43,7 @@ aws cloudformation deploy --stack-name nu01-github-deploy \
   --parameter-overrides "HostedZoneId=$zone" "GitHubRepository=$REPO" \
     "GitHubImmutableRepository=${REPO%%/*}@$owner_id/${REPO##*/}@$repo_id" \
     "CreateOidcProvider=$create_provider" \
+  --tags project=nu01 tenancy=shared \
   --no-fail-on-empty-changeset
 output() {
   aws cloudformation describe-stacks --stack-name nu01-github-deploy \

@@ -85,3 +85,18 @@ spec.
    (`site/images/bg-grigri.jpg`), in all four languages. With seven nav
    buttons, the tighter bar now starts below 1000px (was 900px). Published with the
    sign-up call (PR #11) through RC to GA.
+
+## 2026-10-14
+
+1. **Cut AWS cost.** Every stack is tagged `project=nu01` and `tenancy=GA`,
+   `RC` or `shared` for cost allocation. The apps' 14 Route 53 health
+   checks (about $24/month) are replaced by the `nu01-monitor` stack: a
+   Lambda function checking the same endpoints every 5 minutes, with one
+   alarm emailing `julio+health@nu01.com` ([monitor.md](monitor.md)).
+2. **Keep the shared infrastructure here, and merge the app subzones.** The
+   `nu01-route53-zone` and `nu01-route53-gmail` stacks moved from
+   prodbytes/dsp (templates unchanged, now tagged); a new `nu01-dns` stack
+   and `scripts/migrate-subzone.sh` merge grigri., tabscan., rbacr. and
+   uplink.nu01.com ($0.50/month each) into the nu01.com zone one project at
+   a time, keeping each subzone for 48 hours after its delegation is
+   removed ([dns.md](dns.md)).

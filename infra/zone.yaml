@@ -1,0 +1,53 @@
+# nu01-route53-zone: the public hosted zone nu01.com (Z04838091YTBIM6PNI1XK),
+# which nu01.com's Route 53 Domains registration delegates to. Ported
+# unchanged from prodbytes/dsp (samples/route53-zone, deployed by
+# gitops/nu01/nu01-deploy.sh); deployed by scripts/deploy-dns.sh with
+# TenantId=nu01 DomainName=nu01.com. Its exports (nu01-HostedZoneId,
+# nu01-HostedZoneName, nu01-NameServers) are imported by nu01-route53-gmail.
+#
+# Deploy in us-east-1: the zone itself is global, but CloudFormation exports
+# are regional.
+Description: Public Route 53 hosted zone for a domain.
+
+Parameters:
+  TenantId:
+    Type: String
+    Default: default
+    Description: Prefix for export names and tag value for Application
+
+  DomainName:
+    Type: String
+    MinLength: 1
+    MaxLength: 63
+    AllowedPattern: "^[a-z0-9][a-z0-9.-]*[a-z0-9]$"
+    Description: Domain the zone serves, e.g. example.com
+
+Resources:
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+      HostedZoneConfig:
+        Comment: !Sub "Public zone for ${DomainName} (${TenantId})"
+      HostedZoneTags:
+        - Key: TenantId
+          Value: !Ref TenantId
+
+Outputs:
+  HostedZoneId:
+    Description: Route 53 hosted zone ID
+    Value: !Ref HostedZone
+    Export:
+      Name: !Sub ${TenantId}-HostedZoneId
+
+  HostedZoneName:
+    Description: Domain the zone serves
+    Value: !Ref DomainName
+    Export:
+      Name: !Sub ${TenantId}-HostedZoneName
+
+  NameServers:
+    Description: Name servers to delegate to at the registrar
+    Value: !Join [",", !GetAtt HostedZone.NameServers]
+    Export:
+      Name: !Sub ${TenantId}-NameServers
