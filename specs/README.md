@@ -24,5 +24,7 @@ rotates through nu01's systems.
   follows a checked RC.
 - [Deploy](deploy.md): the AWS stacks, the workflows and their roles, the
   smoke test, and retiring the old nu01.com site.
+- [DNS](dns.md): the shared stacks this repository owns (the nu01.com
+  zone, Gmail records, the apps' records) and merging the app subzones.
 - [Monitor](monitor.md): the `nu01-monitor` uptime checks for every nu01
   app, GA and RC, and their alarm email.

@@ -26,6 +26,8 @@ and invalidates CloudFront, then smoke-tests the live site.
 - **Tags:** each stack, and so each of its resources, carries the
   cost-allocation tags `project=nu01` and `tenancy=GA` or `RC`.
 - **One-time setup:** [scripts/bootstrap.sh](../scripts/bootstrap.sh).
+- **Zone:** the `nu01.com` zone and its shared records are separate stacks,
+  deployed by hand ([dns.md](dns.md)).
 - **Uptime:** the nu01 apps are watched by the separate
   `nu01-monitor` stack ([monitor.md](monitor.md)), not by Route 53 health
   checks.
