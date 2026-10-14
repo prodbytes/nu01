@@ -24,3 +24,5 @@ rotates through nu01's systems.
   follows a checked RC.
 - [Deploy](deploy.md): the AWS stacks, the workflows and their roles, the
   smoke test, and retiring the old nu01.com site.
+- [Monitor](monitor.md): the `nu01-monitor` uptime checks for every nu01
+  app, GA and RC, and their alarm email.

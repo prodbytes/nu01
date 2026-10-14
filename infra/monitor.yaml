@@ -1,0 +1,209 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  nu01-monitor: uptime checks for every nu01 app, GA and RC, replacing the
+  per-project Route 53 health checks. A Lambda function, run every 5
+  minutes, fetches each endpoint over HTTPS and wants a 2xx answer and,
+  where set, a substring in the body; it fails when any check fails. One
+  alarm on its Errors emails the nu01-health topic, and the function adds
+  a message naming the failing URLs when the alarm isn't already in ALARM.
+  Deployed by hand (scripts/deploy-monitor.sh), not by CI.
+
+Parameters:
+  AlertEmail:
+    Type: String
+    Default: julio+health@nu01.com
+    Description: Subscribed to the nu01-health topic (confirm the email once)
+  Endpoints:
+    Type: String
+    Description: >
+      JSON list, one endpoint per line: url, and optionally match, a
+      substring the body must contain.
+    Default: |
+      [
+      {"url": "https://presence.nu01.com/health", "match": "\"status\":\"ok\""},
+      {"url": "https://rc.presence.nu01.com/health", "match": "\"status\":\"ok\""},
+      {"url": "https://grigri.nu01.com/app/version.json", "match": "\"app_name\":\"grigri_app\""},
+      {"url": "https://rc.grigri.nu01.com/app/version.json", "match": "\"app_name\":\"grigri_app\""},
+      {"url": "https://grigri.nu01.com/api/health", "match": "\"ok\":true"},
+      {"url": "https://rc.grigri.nu01.com/api/health", "match": "\"ok\":true"},
+      {"url": "https://tabscan.nu01.com/app/version.json", "match": "\"app_name\":\"tabscan_app\""},
+      {"url": "https://rc.tabscan.nu01.com/app/version.json", "match": "\"app_name\":\"tabscan_app\""},
+      {"url": "https://rbacr.nu01.com/health"},
+      {"url": "https://rc.rbacr.nu01.com/health"},
+      {"url": "https://uplink.nu01.com/"},
+      {"url": "https://rc.uplink.nu01.com/"},
+      {"url": "https://uplink.nu01.com/health", "match": "\"status\": \"ok\""},
+      {"url": "https://rc.uplink.nu01.com/health", "match": "\"status\": \"ok\""}
+      ]
+
+Resources:
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: nu01-health
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref AlertEmail
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/nu01-monitor
+      RetentionInDays: 14
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: {Service: lambda.amazonaws.com}
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: monitor
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: [logs:CreateLogStream, logs:PutLogEvents]
+                Resource: !GetAtt LogGroup.Arn
+              - Effect: Allow
+                Action: sns:Publish
+                Resource: !Ref Topic
+              - Effect: Allow
+                Action: cloudwatch:DescribeAlarms
+                Resource: '*'
+
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: nu01-monitor
+      Description: Checks the nu01 apps' endpoints (see the nu01-monitor stack)
+      Runtime: python3.13
+      Architectures: [arm64]
+      MemorySize: 128
+      Timeout: 120
+      Handler: index.handler
+      Role: !GetAtt Role.Arn
+      LoggingConfig:
+        LogGroup: !Ref LogGroup
+      Environment:
+        Variables:
+          ENDPOINTS: !Ref Endpoints
+          TOPIC_ARN: !Ref Topic
+          ALARM_NAME: nu01-monitor-errors
+      Code:
+        ZipFile: |
+          # Fails (raises) when any endpoint fails, which drives the alarm.
+          # MONITOR_DRY_RUN=1 skips CloudWatch and SNS (local runs).
+          import json, os, time, urllib.request
+          from concurrent.futures import ThreadPoolExecutor
+
+          def fetch(url):
+              req = urllib.request.Request(url, headers={"User-Agent": "nu01-monitor"})
+              with urllib.request.urlopen(req, timeout=10) as r:
+                  return r.status, r.read(65536).decode("utf-8", "replace")
+
+          def check(ep):
+              """None when healthy, else why not (one retry after 3 s)."""
+              for attempt in (1, 2):
+                  try:
+                      status, body = fetch(ep["url"])
+                      if not 200 <= status < 300:
+                          why = f"HTTP {status}"
+                      elif ep.get("match") and ep["match"] not in body:
+                          why = f"HTTP {status}, body lacks {ep['match']!r}"
+                      else:
+                          return None
+                  except Exception as e:  # HTTPError, URLError, timeout
+                      why = f"{type(e).__name__}: {e}"
+                  if attempt == 1:
+                      time.sleep(3)
+              return why
+
+          def alert(failures):
+              import boto3
+              alarm = os.environ["ALARM_NAME"]
+              try:
+                  alarms = boto3.client("cloudwatch").describe_alarms(AlarmNames=[alarm])
+                  if any(a["StateValue"] == "ALARM" for a in alarms["MetricAlarms"]):
+                      return  # already alerted; the alarm's OK will follow
+              except Exception as e:
+                  print(f"describe_alarms failed ({e}); alerting anyway")
+              lines = [f"{url}: {why}" for url, why in failures]
+              boto3.client("sns").publish(
+                  TopicArn=os.environ["TOPIC_ARN"],
+                  Subject=f"nu01-monitor: {len(failures)} endpoint(s) failing",
+                  Message="Failing:\n" + "\n".join(lines)
+                  + f"\n\nThe {alarm} alarm emails again when it changes state.")
+
+          def handler(event=None, context=None):
+              endpoints = json.loads(os.environ["ENDPOINTS"])
+              with ThreadPoolExecutor(8) as pool:
+                  results = list(pool.map(check, endpoints))
+              failures = [(ep["url"], why) for ep, why in zip(endpoints, results) if why]
+              for ep, why in zip(endpoints, results):
+                  print(f"{'FAIL' if why else 'ok'} {ep['url']}" + (f": {why}" if why else ""))
+              if failures:
+                  if os.environ.get("MONITOR_DRY_RUN") != "1":
+                      alert(failures)
+                  raise RuntimeError(f"{len(failures)}/{len(endpoints)} checks failed: "
+                                     + ", ".join(url for url, _ in failures))
+              return {"checked": len(endpoints)}
+
+  # A failed run is reported, not retried: the next one is 5 minutes away.
+  InvokeConfig:
+    Type: AWS::Lambda::EventInvokeConfig
+    Properties:
+      FunctionName: !Ref Function
+      Qualifier: $LATEST
+      MaximumRetryAttempts: 0
+
+  Schedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Runs nu01-monitor every 5 minutes
+      ScheduleExpression: rate(5 minutes)
+      Targets:
+        - Id: monitor
+          Arn: !GetAtt Function.Arn
+
+  SchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Function
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Schedule.Arn
+
+  # Errors >= 1 in 2 consecutive 5-minute periods. Missing data means the
+  # function didn't run at all, which is also a failure (breaching).
+  ErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: nu01-monitor-errors
+      AlarmDescription: >
+        A nu01 endpoint is failing (or nu01-monitor isn't running). The
+        function's logs, /aws/lambda/nu01-monitor, name the failing URLs.
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref Function
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: breaching
+      AlarmActions: [!Ref Topic]
+      OKActions: [!Ref Topic]
+
+Outputs:
+  TopicArn:
+    Value: !Ref Topic
+  FunctionName:
+    Value: !Ref Function
+  AlarmName:
+    Value: !Ref ErrorsAlarm

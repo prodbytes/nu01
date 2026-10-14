@@ -91,6 +91,7 @@ Resources:
                   - acm:DeleteCertificate
                   - acm:ListCertificates
                   - acm:AddTagsToCertificate
+                  - acm:RemoveTagsFromCertificate
                   - acm:ListTagsForCertificate
                 Resource: '*'
               - Effect: Allow
@@ -165,6 +166,7 @@ Resources:
                   - acm:DeleteCertificate
                   - acm:ListCertificates
                   - acm:AddTagsToCertificate
+                  - acm:RemoveTagsFromCertificate
                   - acm:ListTagsForCertificate
                 Resource: '*'
               - Effect: Allow

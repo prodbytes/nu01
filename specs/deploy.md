@@ -23,7 +23,12 @@ and invalidates CloudFront, then smoke-tests the live site.
   and bucket, and change only its own records and their ACM validation
   names. The repository variable `HOSTED_ZONE_ID` names the `nu01.com`
   zone (deploy.sh looks it up by name otherwise).
+- **Tags:** each stack, and so each of its resources, carries the
+  cost-allocation tags `project=nu01` and `tenancy=GA` or `RC`.
 - **One-time setup:** [scripts/bootstrap.sh](../scripts/bootstrap.sh).
+- **Uptime:** the nu01 apps are watched by the separate
+  `nu01-monitor` stack ([monitor.md](monitor.md)), not by Route 53 health
+  checks.
 
 ## Retiring the old site
 
