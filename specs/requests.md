@@ -107,3 +107,13 @@ spec.
    no link to open it; it now has an "Open uplink" button to
    https://uplink.nu01.com/ (above the source button, under the install
    one-liner), in all four languages. Every app now opens from its article.
+2. **Adjust tabscan's name and links: the app is now tabcam.** The
+   article, its nav button and hero (`#tabcam`), its bundle keys
+   (`tabcam.*`, in all four languages), the illustration
+   (`site/img/tabcam.svg`) and background (`site/images/bg-tabcam.jpg`),
+   the app link (https://tabcam.nu01.com/app/), the source link
+   (https://github.com/prodbytes/tabcam), the README and the monitor's
+   checks (tabcam.nu01.com and rc.tabcam.nu01.com, `tabcam_app`) all say
+   tabcam. The DNS stack and migration script still name the old
+   tabscan. subzone, whose records serve the redirects to tabcam
+   ([site.md](site.md), [monitor.md](monitor.md), [i18n.md](i18n.md)).
