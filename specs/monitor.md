@@ -19,7 +19,9 @@ string-match options).
   already in ALARM, so an outage isn't an email every 5 minutes.
 - **Email:** `AlertEmail` (default `julio+health@nu01.com`); confirm the
   subscription email after the first deploy.
-- **Endpoints:** the `Endpoints` parameter, one JSON object per line. To add
+- **Endpoints:** the `Endpoints` parameter's default, one JSON object per
+  line. `scripts/deploy-monitor.sh` passes that list on every deploy (a
+  plain `aws cloudformation deploy` would keep the previous value). To add
   one, add a line and run `scripts/deploy-monitor.sh`:
 
   ```json

@@ -121,3 +121,9 @@ spec.
    someone to climb with" to "Join someone to climb with", and the same in
    Spanish, Portuguese and Catalan (which said "find" too); the spec
    records that it always says "Join".
+4. **Push the update.** Released through RC to GA (`0.1.202610171247`).
+   The monitor still checked tabscan after the rename, and its alarm was
+   firing: `aws cloudformation deploy` keeps a parameter's previous value,
+   so the new `Endpoints` default never reached the function.
+   `scripts/deploy-monitor.sh` now passes the template's list on every
+   deploy; redeployed, all 14 checks pass.

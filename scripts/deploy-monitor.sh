@@ -16,15 +16,31 @@ cd "$(dirname "$0")/.."
 export AWS_REGION="${AWS_REGION:-us-east-1}"
 export AWS_DEFAULT_REGION="$AWS_REGION"
 
-overrides=()
-[[ -n "${ALERT_EMAIL:-}" ]] && overrides=(--parameter-overrides "AlertEmail=$ALERT_EMAIL")
+# `aws cloudformation deploy` keeps a parameter's previous value unless it is
+# passed, so a changed Endpoints default would never reach the function: pass
+# the template's list every time.
+endpoints="$(python3 - infra/monitor.yaml <<'PY'
+import sys
+lines = open(sys.argv[1]).read().splitlines()
+start = lines.index("  Endpoints:")
+default = next(i for i in range(start, len(lines)) if lines[i].strip() == "Default: |")
+out = []
+for line in lines[default + 1:]:
+    if line.strip() and not line.startswith("      "):
+        break
+    out.append(line[6:])
+print("\n".join(out).strip())
+PY
+)"
+overrides=(--parameter-overrides "Endpoints=$endpoints")
+[[ -n "${ALERT_EMAIL:-}" ]] && overrides+=("AlertEmail=$ALERT_EMAIL")
 
 # Tagged for cost allocation (CloudFormation copies the stack's tags to its
 # resources)
 echo "==> deploying nu01-monitor ($AWS_REGION)"
 aws cloudformation deploy --stack-name nu01-monitor --template-file infra/monitor.yaml \
   --capabilities CAPABILITY_IAM \
-  ${overrides[@]+"${overrides[@]}"} \
+  "${overrides[@]}" \
   --tags project=nu01 tenancy=shared \
   --no-fail-on-empty-changeset
 
