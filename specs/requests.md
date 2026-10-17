@@ -117,3 +117,7 @@ spec.
    tabcam. The DNS stack and migration script still name the old
    tabscan. subzone, whose records serve the redirects to tabcam
    ([site.md](site.md), [monitor.md](monitor.md), [i18n.md](i18n.md)).
+3. **grigri's call says "Join", always.** Its headline changed from "Find
+   someone to climb with" to "Join someone to climb with", and the same in
+   Spanish, Portuguese and Catalan (which said "find" too); the spec
+   records that it always says "Join".
