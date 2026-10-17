@@ -23,7 +23,11 @@
   | uplink | Find every broken link | https://uplink.nu01.com/, and the install one-liner `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` | https://github.com/prodbytes/uplink |
   | rbacr | Roles for every app you run | https://rbacr.nu01.com/ | https://github.com/prodbytes/rbacr |
   | tabcam | Scan and share guitar tabs | https://tabcam.nu01.com/app/ | https://github.com/prodbytes/tabcam |
-  | grigri | Find someone to climb with | https://grigri.nu01.com/ | https://github.com/prodbytes/grigri |
+  | grigri | Join someone to climb with | https://grigri.nu01.com/ | https://github.com/prodbytes/grigri |
+
+- **grigri's call always says "Join"**, never "Find", in every language:
+  "Join someone to climb with" (es "Únete a alguien para escalar", pt
+  "Junte-se a alguém para escalar", ca "Uneix-te a algú per escalar").
 
 ## Behaviour
 
