@@ -12,14 +12,15 @@
   the apps and support our work", with a "Sign up on Substack" button to
   https://prodbytes.substack.com/subscribe (a new tab).
 - **Heroes**, rotating every 7 seconds under the description, each opening
-  an article with an illustration, a paragraph and a link; each app's
-  article also has a "Source on GitHub" button to its repository:
+  an article with an illustration, a paragraph and a link; every app's
+  article has an "Open <app>" button to the app, and a "Source on GitHub"
+  button to its repository:
 
   | Hero | Headline (English) | Link | Repository |
   |---|---|---|---|
   | Learnware | More than AI: people learning | https://prodbytes.substack.com/ | — |
   | presence | Keep an eye on the places you care for | https://presence.nu01.com/ | https://github.com/prodbytes/presence |
-  | uplink | Find every broken link | the install one-liner, `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` | https://github.com/prodbytes/uplink |
+  | uplink | Find every broken link | https://uplink.nu01.com/, and the install one-liner `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` | https://github.com/prodbytes/uplink |
   | rbacr | Roles for every app you run | https://rbacr.nu01.com/ | https://github.com/prodbytes/rbacr |
   | tabscan | Scan and share guitar tabs | https://tabscan.nu01.com/app/ | https://github.com/prodbytes/tabscan |
   | grigri | Find someone to climb with | https://grigri.nu01.com/ | https://github.com/prodbytes/grigri |

@@ -23,6 +23,7 @@
   "presence.cta": "Open presence",
   "uplink.title": "Find every broken link",
   "uplink.body": "uplink crawls your whole site, follows its sitemaps, and shows each broken link with the page it was found on. Watch it live in your terminal, or run a single pass in CI.",
+  "uplink.cta": "Open uplink",
   "rbacr.title": "Roles for every app you run",
   "rbacr.body": "Sign in with Google, grant roles to a person or a whole domain, and hand out vouchers that unlock premium. People see their roles as pages; your apps read them as JSON.",
   "rbacr.cta": "Open rbacr",
