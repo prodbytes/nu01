@@ -23,6 +23,7 @@
   "presence.cta": "Obre presence",
   "uplink.title": "Troba cada enllaç trencat",
   "uplink.body": "uplink recorre tot el teu lloc web, segueix els seus sitemaps i mostra cada enllaç trencat amb la pàgina on apareix. Mira-ho en directe al terminal o fes una sola passada a la CI.",
+  "uplink.cta": "Obre uplink",
   "rbacr.title": "Rols per a cada app que gestiones",
   "rbacr.body": "Inicia sessió amb Google, assigna rols a una persona o a un domini sencer i reparteix vals que desbloquegen el prèmium. Les persones veuen els seus rols com a pàgines; les teves apps els llegeixen com a JSON.",
   "rbacr.cta": "Obre rbacr",

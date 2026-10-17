@@ -23,6 +23,7 @@
   "presence.cta": "Abrir o presence",
   "uplink.title": "Encontre cada link quebrado",
   "uplink.body": "O uplink percorre todo o seu site, segue os sitemaps e mostra cada link quebrado com a página onde ele aparece. Acompanhe ao vivo no terminal ou rode uma única verificação no CI.",
+  "uplink.cta": "Abrir o uplink",
   "rbacr.title": "Papéis para cada app que você mantém",
   "rbacr.body": "Entre com o Google, atribua papéis a uma pessoa ou a um domínio inteiro e distribua cupons que liberam o premium. As pessoas veem seus papéis em páginas; seus apps os leem em JSON.",
   "rbacr.cta": "Abrir o rbacr",

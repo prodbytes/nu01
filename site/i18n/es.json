@@ -23,6 +23,7 @@
   "presence.cta": "Abrir presence",
   "uplink.title": "Encuentra cada enlace roto",
   "uplink.body": "uplink recorre todo tu sitio, sigue sus sitemaps y muestra cada enlace roto con la página donde aparece. Míralo en directo en tu terminal o ejecuta una sola pasada en CI.",
+  "uplink.cta": "Abrir uplink",
   "rbacr.title": "Roles para cada app que gestionas",
   "rbacr.body": "Inicia sesión con Google, asigna roles a una persona o a un dominio entero y reparte cupones que desbloquean el premium. Las personas ven sus roles como páginas; tus apps los leen como JSON.",
   "rbacr.cta": "Abrir rbacr",

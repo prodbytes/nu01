@@ -100,3 +100,10 @@ spec.
    uplink.nu01.com ($0.50/month each) into the nu01.com zone one project at
    a time, keeping each subzone for 48 hours after its delegation is
    removed ([dns.md](dns.md)).
+
+## 2026-10-17
+
+1. **Links to open all apps.** uplink was the only app whose article had
+   no link to open it; it now has an "Open uplink" button to
+   https://uplink.nu01.com/ (above the source button, under the install
+   one-liner), in all four languages. Every app now opens from its article.
