@@ -31,7 +31,7 @@ string-match options).
   | presence.nu01.com | `/health` | `"status":"ok"` |
   | grigri.nu01.com | `/app/version.json` | `"app_name":"grigri_app"` |
   | grigri.nu01.com | `/api/health` | `"ok":true` |
-  | tabscan.nu01.com | `/app/version.json` | `"app_name":"tabscan_app"` |
+  | tabcam.nu01.com | `/app/version.json` | `"app_name":"tabcam_app"` |
   | rbacr.nu01.com | `/health` | (2xx only) |
   | uplink.nu01.com | `/` | (2xx only) |
   | uplink.nu01.com | `/health` | `"status": "ok"` |

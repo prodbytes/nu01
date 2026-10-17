@@ -22,7 +22,7 @@
   | presence | Keep an eye on the places you care for | https://presence.nu01.com/ | https://github.com/prodbytes/presence |
   | uplink | Find every broken link | https://uplink.nu01.com/, and the install one-liner `curl -fsSL https://sh.uplink.nu01.com \| sh -s -- https://nu01.com` | https://github.com/prodbytes/uplink |
   | rbacr | Roles for every app you run | https://rbacr.nu01.com/ | https://github.com/prodbytes/rbacr |
-  | tabscan | Scan and share guitar tabs | https://tabscan.nu01.com/app/ | https://github.com/prodbytes/tabscan |
+  | tabcam | Scan and share guitar tabs | https://tabcam.nu01.com/app/ | https://github.com/prodbytes/tabcam |
   | grigri | Find someone to climb with | https://grigri.nu01.com/ | https://github.com/prodbytes/grigri |
 
 ## Behaviour
@@ -37,7 +37,7 @@
   rotate. Below 1000px the nav buttons are tighter, and up to 640px they
   stack in a column (Dimension alone stacks only below 480px).
 - The nav buttons and the hero line open the articles (Dimension's
-  `#learning`, `#presence`, `#uplink`, `#rbacr`, `#tabscan`, `#grigri`); a link with one of those
+  `#learning`, `#presence`, `#uplink`, `#rbacr`, `#tabcam`, `#grigri`); a link with one of those
   hashes opens straight on it.
 - Links to other hosts (other domains and nu01.com subdomains, e.g. the
   article buttons, prodbytes.substack.com, HTML5 UP) open in a new tab
