@@ -28,3 +28,5 @@ rotates through nu01's systems.
   zone, Gmail records, the apps' records) and merging the app subzones.
 - [Monitor](monitor.md): the `nu01-monitor` uptime checks for every nu01
   app, GA and RC, and their alarm email.
+- [Cost report](cost-report.md): AWS cost per profile, project, month and
+  day, written to timestamped files under `reports/costs/`.

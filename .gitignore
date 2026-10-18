@@ -4,6 +4,9 @@ dist/
 # scripts/retire-legacy.sh backups of the old site's buckets
 legacy-backup/
 
+# Cost reports (scripts/cost-report.py): account data, kept out of this public repo
+reports/
+
 # Local HTTPS certificate and key (scripts/local-certs.sh)
 certs/
 
