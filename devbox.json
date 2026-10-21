@@ -18,7 +18,8 @@
       "dev": "devbox services up",
       "build": "bash scripts/build.sh",
       "rc": "bash scripts/release-rc.sh",
-      "ga": "bash scripts/release-ga.sh"
+      "ga": "bash scripts/release-ga.sh",
+      "cost": "python3 scripts/cost-report.py"
     }
   }
 }

@@ -4,9 +4,10 @@
 #   make serve     the dev server on http://localhost:1415/ (rebuilds on change)
 #   make rc        tag and push a release candidate (deploys rc.nu01.com)
 #   make ga        tag and push GA (deploys nu01.com; needs a live, tested RC)
+#   make cost      AWS cost report per profile, project, month and day (reports/costs/)
 #   make clean     remove dist/
 
-.PHONY: build serve rc ga clean
+.PHONY: build serve rc ga cost clean
 
 build:
 	@bash scripts/build.sh
@@ -16,5 +17,7 @@ rc:
 	@bash scripts/release-rc.sh
 ga:
 	@bash scripts/release-ga.sh
+cost:
+	@python3 scripts/cost-report.py
 clean:
 	rm -rf dist

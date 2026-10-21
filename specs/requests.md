@@ -127,3 +127,12 @@ spec.
    so the new `Endpoints` default never reached the function.
    `scripts/deploy-monitor.sh` now passes the template's list on every
    deploy; redeployed, all 14 checks pass.
+
+## 2026-10-18
+
+1. **Report AWS cost per project, by day, by month and by profile.**
+   `scripts/cost-report.py` (`make cost`, `devbox run cost`) reads Cost
+   Explorer through every AWS CLI profile and writes a Markdown and a JSON
+   report to timestamped files under `reports/costs/YYYY/MM/` (git-ignored).
+   No AWS setup was needed: the `project` and `tenancy` cost allocation tags
+   were already active and backfilled ([cost-report.md](cost-report.md)).
