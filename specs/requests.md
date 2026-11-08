@@ -136,3 +136,18 @@ spec.
    report to timestamped files under `reports/costs/YYYY/MM/` (git-ignored).
    No AWS setup was needed: the `project` and `tenancy` cost allocation tags
    were already active and backfilled ([cost-report.md](cost-report.md)).
+
+## 2026-11-08
+
+1. **Merge the remaining app subzones into nu01.com and delete them, to
+   save costs.** A check found none of the records of grigri., tabscan.,
+   uplink. or tabcam.nu01.com in nu01.com yet (only their delegations), so
+   nothing was deleted. `nu01-dns` gained a `MigrateTabcam` switch holding
+   tabcam's aliases, local name and SES email records (DKIM, MAIL FROM,
+   DMARC); tabscan's group lost local.tabscan. (deleted with TabScan) and
+   its distribution defaults now name the redirect distributions.
+   `scripts/migrate-subzone.sh` gained `tabcam`. Round 1 ran for tabscan,
+   grigri, uplink and tabcam: their delegations are gone, all 37 subzone
+   records answer from nu01.com, every site answers HTTPS and SES still
+   reports tabcam.nu01.com verified. Round 2 and the deletions wait until
+   2026-11-10 10:46 UTC ([dns.md](dns.md)).

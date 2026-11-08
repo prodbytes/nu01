@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Merges one app's delegated subzone (grigri., tabscan., rbacr. or
-# uplink.nu01.com) into the nu01.com zone, without downtime and without
+# Merges one app's delegated subzone (grigri., tabscan., rbacr., uplink. or
+# tabcam.nu01.com) into the nu01.com zone, without downtime and without
 # deleting anything that resolvers may still use. Admin-run, by hand.
 #
-#   scripts/migrate-subzone.sh <grigri|tabscan|rbacr|uplink>
+#   scripts/migrate-subzone.sh <grigri|tabscan|rbacr|uplink|tabcam>
 #
 # Without CONFIRM=yes (the default, a dry run) it only reads: it checks the
 # subzone holds exactly the records nu01-dns will recreate, prints the
@@ -51,8 +51,7 @@ local.grigri.nu01.com. AAAA 3600 ::1" ;;
   tabscan)
     SUBZONE=Z10277161AEN9OU2H73PJ; PARAM=MigrateTabscan; NS_STACK=
     HOSTS="tabscan.nu01.com=TabscanDistribution rc.tabscan.nu01.com=TabscanRcDistribution"
-    OTHERS="local.tabscan.nu01.com. A 300 127.0.0.1
-local.tabscan.nu01.com. AAAA 300 ::1" ;;
+    OTHERS="" ;;
   rbacr)
     SUBZONE=Z0415297342E0C595290P; PARAM=MigrateRbacr; NS_STACK=rbacr-zone
     HOSTS="rbacr.nu01.com=RbacrDistribution rc.rbacr.nu01.com=RbacrRcDistribution"
@@ -62,7 +61,18 @@ rbacr.nu01.com. CAA 3600 0 issue \"amazon.com\"|0 issuewild \";\"" ;;
     SUBZONE=Z04348662JLR2LAZSOI74; PARAM=MigrateUplink; NS_STACK=uplink-zone
     HOSTS="uplink.nu01.com=UplinkDistribution rc.uplink.nu01.com=UplinkRcDistribution sh.uplink.nu01.com=UplinkShDistribution"
     OTHERS="" ;;
-  *) echo "usage: $0 <grigri|tabscan|rbacr|uplink>" >&2; exit 2 ;;
+  tabcam)
+    SUBZONE=Z01245733BIHST1A417HE; PARAM=MigrateTabcam; NS_STACK=
+    HOSTS="tabcam.nu01.com=TabcamDistribution rc.tabcam.nu01.com=TabcamRcDistribution"
+    OTHERS="local.tabcam.nu01.com. A 300 127.0.0.1
+local.tabcam.nu01.com. AAAA 300 ::1
+7ia3hn2f7bxrr63itkejfcbsb27zjph3._domainkey.tabcam.nu01.com. CNAME 1800 7ia3hn2f7bxrr63itkejfcbsb27zjph3.dkim.amazonses.com
+b75aeb46tkr4fymlrjebfiasreak7dci._domainkey.tabcam.nu01.com. CNAME 1800 b75aeb46tkr4fymlrjebfiasreak7dci.dkim.amazonses.com
+qczejvrcytyak2kfzpuiao6gohnmd3nc._domainkey.tabcam.nu01.com. CNAME 1800 qczejvrcytyak2kfzpuiao6gohnmd3nc.dkim.amazonses.com
+mail.tabcam.nu01.com. MX 1800 10 feedback-smtp.us-east-1.amazonses.com
+mail.tabcam.nu01.com. TXT 1800 \"v=spf1 include:amazonses.com ~all\"
+_dmarc.tabcam.nu01.com. TXT 1800 \"v=DMARC1; p=none\"" ;;
+  *) echo "usage: $0 <grigri|tabscan|rbacr|uplink|tabcam>" >&2; exit 2 ;;
 esac
 DOMAIN="$project.nu01.com"
 work="$(mktemp -d)"
@@ -190,7 +200,7 @@ while IFS= read -r line; do [[ -n "$line" ]] && overrides+=("$line"); done <"$wo
 current_switch() { # current_switch <MigrateX>: its value in nu01-dns (default false)
   awk -v k="$1" '$1 == k { v = $2 } END { print (v == "" ? "false" : v) }' <<<"$migrated_params"
 }
-for p in MigrateGrigri MigrateTabscan MigrateRbacr MigrateUplink; do
+for p in MigrateGrigri MigrateTabscan MigrateRbacr MigrateUplink MigrateTabcam; do
   if [[ "$p" == "$PARAM" ]]; then overrides+=("$p=true"); else overrides+=("$p=$(current_switch "$p")"); fi
 done
 already="$(current_switch "$PARAM")"
@@ -312,7 +322,7 @@ echo "    After that, round 2 and the deletion (see specs/dns.md):"
 echo "      1. the $project repo's stacks stop writing records to $SUBZONE and"
 echo "         validate their certificates in nu01.com ($APEX_ZONE)"
 case "$project" in
-  grigri|tabscan)
+  grigri|tabscan|tabcam)
     echo "      2. empty the hand-made zone and delete it:"
     echo "         aws route53 list-resource-record-sets --hosted-zone-id $SUBZONE --output json \\"
     echo "           | python3 -c 'import json,sys; print(json.dumps({\"Changes\": [{\"Action\": \"DELETE\", \"ResourceRecordSet\": r} for r in json.load(sys.stdin)[\"ResourceRecordSets\"] if r[\"Type\"] not in (\"NS\", \"SOA\")]}))' >empty.json"

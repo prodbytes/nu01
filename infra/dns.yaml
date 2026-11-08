@@ -1,11 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
   nu01-dns: the apps' records in the nu01.com zone, replacing their
-  delegated subzones (grigri., tabscan., rbacr. and uplink.nu01.com, each a
-  separate $0.50/month hosted zone). One Migrate<Project> switch per
-  project, turned on by scripts/migrate-subzone.sh right after it removes
-  that project's NS delegation from nu01.com. Holds the CloudFront aliases,
-  the local.* loopback names and rbacr's CAA record; the ACM validation
+  delegated subzones (grigri., tabscan., rbacr., uplink. and
+  tabcam.nu01.com, each a separate $0.50/month hosted zone). One
+  Migrate<Project> switch per project, turned on by
+  scripts/migrate-subzone.sh right after it removes that project's NS
+  delegation from nu01.com. Holds the CloudFront aliases, the local.*
+  loopback names, rbacr's CAA record and tabcam's SES email records; the ACM validation
   CNAMEs are copied by the migration script and later owned by each
   project's certificate stack. Deployed by hand (scripts/deploy-dns.sh).
 
@@ -30,9 +31,14 @@ Parameters:
     Type: String
     AllowedValues: ['true', 'false']
     Default: 'false'
+  MigrateTabcam:
+    Type: String
+    AllowedValues: ['true', 'false']
+    Default: 'false'
   # Each host's CloudFront distribution domain name (defaults: the live
-  # values on 2026-10-14). A changed distribution must be passed explicitly:
-  # an update keeps a parameter's previous value.
+  # values on 2026-10-14; tabscan's and tabcam's on 2026-11-08, after
+  # tabscan. became redirects to tabcam.). A changed distribution must be
+  # passed explicitly: an update keeps a parameter's previous value.
   GrigriDistribution:
     Type: String
     Default: d2psby6crjtnpu.cloudfront.net
@@ -41,10 +47,16 @@ Parameters:
     Default: d50j1qrcefc6d.cloudfront.net
   TabscanDistribution:
     Type: String
-    Default: dsoen0uzo6zi8.cloudfront.net
+    Default: d3jrcrindtlu3h.cloudfront.net
   TabscanRcDistribution:
     Type: String
-    Default: d1vw5noh5aihur.cloudfront.net
+    Default: d3sbat8xz4nbwz.cloudfront.net
+  TabcamDistribution:
+    Type: String
+    Default: d2ovc608fesjg2.cloudfront.net
+  TabcamRcDistribution:
+    Type: String
+    Default: dbvmbxr2x46qc.cloudfront.net
   RbacrDistribution:
     Type: String
     Default: d3oqtadea79agl.cloudfront.net
@@ -66,6 +78,7 @@ Conditions:
   Tabscan: !Equals [!Ref MigrateTabscan, 'true']
   Rbacr: !Equals [!Ref MigrateRbacr, 'true']
   Uplink: !Equals [!Ref MigrateUplink, 'true']
+  Tabcam: !Equals [!Ref MigrateTabcam, 'true']
 
 # Z2FDTNDATAQYW2 is CloudFront's alias hosted zone (the same everywhere).
 Resources:
@@ -97,8 +110,7 @@ Resources:
         - {Name: tabscan.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanDistribution, EvaluateTargetHealth: false}}
         - {Name: rc.tabscan.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanRcDistribution, EvaluateTargetHealth: false}}
         - {Name: rc.tabscan.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabscanRcDistribution, EvaluateTargetHealth: false}}
-        - {Name: local.tabscan.nu01.com, Type: A, TTL: '300', ResourceRecords: [127.0.0.1]}
-        - {Name: local.tabscan.nu01.com, Type: AAAA, TTL: '300', ResourceRecords: ['::1']}
+        # local.tabscan.nu01.com went with TabScan (tabcam's retire-tabscan.sh).
 
   RbacrRecords:
     Type: AWS::Route53::RecordSetGroup
@@ -126,3 +138,26 @@ Resources:
         - {Name: rc.uplink.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkRcDistribution, EvaluateTargetHealth: false}}
         - {Name: sh.uplink.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkShDistribution, EvaluateTargetHealth: false}}
         - {Name: sh.uplink.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref UplinkShDistribution, EvaluateTargetHealth: false}}
+
+  # tabcam's site aliases, its local name, and the SES records tabcam's
+  # tabcam-email stack made in the subzone: Easy DKIM (the identity's three
+  # tokens, fixed for as long as the SES identity exists), the custom MAIL
+  # FROM (MX and SPF to SES in us-east-1) and DMARC.
+  TabcamRecords:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: Tabcam
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      RecordSets:
+        - {Name: tabcam.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabcamDistribution, EvaluateTargetHealth: false}}
+        - {Name: tabcam.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabcamDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.tabcam.nu01.com, Type: A, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabcamRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: rc.tabcam.nu01.com, Type: AAAA, AliasTarget: {HostedZoneId: Z2FDTNDATAQYW2, DNSName: !Ref TabcamRcDistribution, EvaluateTargetHealth: false}}
+        - {Name: local.tabcam.nu01.com, Type: A, TTL: '300', ResourceRecords: [127.0.0.1]}
+        - {Name: local.tabcam.nu01.com, Type: AAAA, TTL: '300', ResourceRecords: ['::1']}
+        - {Name: 7ia3hn2f7bxrr63itkejfcbsb27zjph3._domainkey.tabcam.nu01.com, Type: CNAME, TTL: '1800', ResourceRecords: [7ia3hn2f7bxrr63itkejfcbsb27zjph3.dkim.amazonses.com]}
+        - {Name: b75aeb46tkr4fymlrjebfiasreak7dci._domainkey.tabcam.nu01.com, Type: CNAME, TTL: '1800', ResourceRecords: [b75aeb46tkr4fymlrjebfiasreak7dci.dkim.amazonses.com]}
+        - {Name: qczejvrcytyak2kfzpuiao6gohnmd3nc._domainkey.tabcam.nu01.com, Type: CNAME, TTL: '1800', ResourceRecords: [qczejvrcytyak2kfzpuiao6gohnmd3nc.dkim.amazonses.com]}
+        - {Name: mail.tabcam.nu01.com, Type: MX, TTL: '1800', ResourceRecords: ['10 feedback-smtp.us-east-1.amazonses.com']}
+        - {Name: mail.tabcam.nu01.com, Type: TXT, TTL: '1800', ResourceRecords: ['"v=spf1 include:amazonses.com ~all"']}
+        - {Name: _dmarc.tabcam.nu01.com, Type: TXT, TTL: '1800', ResourceRecords: ['"v=DMARC1; p=none"']}

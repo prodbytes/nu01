@@ -22,21 +22,32 @@ belong to its own stacks.
 
 ## Merging the app subzones
 
-grigri., tabscan., rbacr. and uplink.nu01.com were each a delegated hosted
-zone ($0.50/month each). `nu01-dns` recreates their records in `nu01.com`,
-one project at a time:
+grigri., tabscan., rbacr., uplink. and tabcam.nu01.com were each a
+delegated hosted zone ($0.50/month each). `nu01-dns` recreates their
+records in `nu01.com`, one project at a time:
 
 | Project | Subzone | Delegation (NS in nu01.com) made by | nu01-dns recreates | ACM validation CNAMEs copied |
 |---|---|---|---|---|
 | grigri | `Z087054988V7QH92N1FX` | hand | grigri., rc.grigri. (A/AAAA aliases); local.grigri. A 127.0.0.1, AAAA ::1 (3600 s) | 2 |
-| tabscan | `Z10277161AEN9OU2H73PJ` | hand | tabscan., rc.tabscan. (A/AAAA); local.tabscan. A, AAAA (300 s) | 2 |
+| tabscan | `Z10277161AEN9OU2H73PJ` | hand | tabscan., rc.tabscan. (A/AAAA), the redirects to tabcam. that tabcam's `tabcam-old-domain` and `tabcam-rc-old-domain` stacks serve (local.tabscan. went with TabScan) | 2 |
 | rbacr | `Z0415297342E0C595290P` | stack `rbacr-zone` (`Delegation`) | rbacr., rc.rbacr. (A/AAAA); local.rbacr. A (3600 s); CAA `0 issue "amazon.com"`, `0 issuewild ";"` | 2 |
 | uplink | `Z04348662JLR2LAZSOI74` | stack `uplink-zone` (`Delegation`) | uplink., rc.uplink., sh.uplink. (A/AAAA) | 3 |
+| tabcam | `Z01245733BIHST1A417HE` | hand | tabcam., rc.tabcam. (A/AAAA); local.tabcam. A, AAAA (300 s); the SES records of stack `tabcam-email`: three Easy DKIM CNAMEs, mail.tabcam. MX and SPF TXT, _dmarc.tabcam. TXT (1800 s) | 2 |
 
 The aliases point at CloudFront (`Z2FDTNDATAQYW2`); each distribution's
 domain is a parameter of `nu01-dns`. TTLs: the delegations in nu01.com are
 3600 s, the subzones' own NS records 172800 s (48 h), nu01.com's SOA record
-900 s with a minimum of 86400 s.
+900 s with a minimum of 60 s (lowered from 86400 s by the first migration).
+
+Where each project stands:
+
+| Project | Round 1 (nu01.com answers) | Round 2 and deletion allowed from | Subzone deleted |
+|---|---|---|---|
+| rbacr | 2026-10-15 | 2026-10-17 | yes (`rbacr-zone` gone) |
+| tabscan | 2026-11-08 09:40 UTC | 2026-11-10 10:40 UTC | not yet |
+| grigri | 2026-11-08 | 2026-11-10 10:46 UTC | not yet |
+| uplink | 2026-11-08 | 2026-11-10 10:46 UTC | not yet |
+| tabcam | 2026-11-08 | 2026-11-10 10:46 UTC | not yet |
 
 ### Why this order
 
@@ -95,7 +106,7 @@ Example: a migration at 2026-10-15 10:00 UTC allows round 2 from 2026-10-17
    creates the new validation CNAME in nu01.com itself. Delete the copied
    CNAMEs once no certificate uses them.
 2. Delete the subzone:
-   - grigri, tabscan (made by hand): delete its remaining records except NS
+   - grigri, tabscan, tabcam (made by hand): delete its remaining records except NS
      and SOA, then `aws route53 delete-hosted-zone --id <zone>` (the script
      prints the exact commands).
    - rbacr: `aws cloudformation delete-stack --stack-name rbacr-zone` once
