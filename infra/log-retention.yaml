@@ -1,0 +1,114 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  nu01-log-retention: keeps every CloudWatch log group in the account and
+  region to a 14-day retention, so log events older than two weeks are
+  deleted. A Lambda function, run daily, sets the retention on each log
+  group that has none or a longer one (Lambda makes its log groups with no
+  retention, and a stack redeploy may restore a longer one). CloudWatch
+  then deletes the expired events itself. Deployed by hand
+  (scripts/deploy-log-retention.sh), not by CI.
+
+Parameters:
+  RetentionDays:
+    Type: Number
+    Default: 14
+    AllowedValues: [1, 3, 5, 7, 14, 30, 60, 90]
+    Description: The longest retention a log group may keep, in days
+
+Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/nu01-log-retention
+      RetentionInDays: 14
+
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: {Service: lambda.amazonaws.com}
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: log-retention
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: [logs:CreateLogStream, logs:PutLogEvents]
+                Resource: !GetAtt LogGroup.Arn
+              - Effect: Allow
+                Action: [logs:DescribeLogGroups, logs:PutRetentionPolicy]
+                Resource: '*'
+
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: nu01-log-retention
+      Description: Caps every log group's retention (see the nu01-log-retention stack)
+      Runtime: python3.13
+      Architectures: [arm64]
+      MemorySize: 128
+      Timeout: 300
+      Handler: index.handler
+      Role: !GetAtt Role.Arn
+      LoggingConfig:
+        LogGroup: !Ref LogGroup
+      Environment:
+        Variables:
+          RETENTION_DAYS: !Ref RetentionDays
+      Code:
+        ZipFile: |
+          # Sets RETENTION_DAYS on every log group with no retention or a
+          # longer one. Fails (raises) when any group can't be changed.
+          import os, boto3
+
+          def handler(event=None, context=None):
+              days = int(os.environ["RETENTION_DAYS"])
+              logs = boto3.client("logs")
+              changed, failed, total = [], [], 0
+              for page in logs.get_paginator("describe_log_groups").paginate():
+                  for group in page["logGroups"]:
+                      total += 1
+                      current = group.get("retentionInDays")
+                      if current is not None and current <= days:
+                          continue
+                      name = group["logGroupName"]
+                      try:
+                          logs.put_retention_policy(logGroupName=name, retentionInDays=days)
+                          changed.append(name)
+                          print(f"set {days} d (was {current or 'never expire'}): {name}")
+                      except Exception as e:
+                          failed.append(name)
+                          print(f"FAIL {name}: {e}")
+              print(f"{total} log groups, {len(changed)} changed, {len(failed)} failed")
+              if failed:
+                  raise RuntimeError(f"{len(failed)} log groups not changed: " + ", ".join(failed))
+              return {"groups": total, "changed": len(changed)}
+
+  # A failed run is reported, not retried: the next one is a day away.
+  InvokeConfig:
+    Type: AWS::Lambda::EventInvokeConfig
+    Properties:
+      FunctionName: !Ref Function
+      Qualifier: $LATEST
+      MaximumRetryAttempts: 0
+
+  Schedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Runs nu01-log-retention once a day
+      ScheduleExpression: cron(0 4 * * ? *)
+      Targets:
+        - Id: log-retention
+          Arn: !GetAtt Function.Arn
+
+  SchedulePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Function
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt Schedule.Arn

@@ -136,3 +136,13 @@ spec.
    report to timestamped files under `reports/costs/YYYY/MM/` (git-ignored).
    No AWS setup was needed: the `project` and `tenancy` cost allocation tags
    were already active and backfilled ([cost-report.md](cost-report.md)).
+
+## 2026-11-11
+
+1. **Delete old logs, and expire them automatically every day.** Log
+   groups with no events for over two weeks were deleted by hand (34,
+   none owned by a live stack), and every remaining log group was set to a
+   14-day retention. The new `nu01-log-retention` stack
+   ([log-retention.md](log-retention.md)) runs a Lambda function daily that
+   puts the same 14-day retention on any log group with none or a longer
+   one, so CloudWatch deletes log events older than two weeks.

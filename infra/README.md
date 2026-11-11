@@ -8,6 +8,7 @@
 | [gmail.yaml](gmail.yaml) | `nu01-route53-gmail` | Google Workspace MX and SPF for `nu01.com` (from prodbytes/dsp, unchanged) |
 | [dns.yaml](dns.yaml) | `nu01-dns` | The apps' records merged into `nu01.com` from their old subzones (grigri, tabscan, rbacr, uplink), one `Migrate<Project>` switch each. See [specs/dns.md](../specs/dns.md) |
 | [monitor.yaml](monitor.yaml) | `nu01-monitor` | Uptime checks for every nu01 app, GA and RC (replacing the per-project Route 53 health checks): a Lambda function run every 5 minutes by an EventBridge rule, its log group (14 days), the `nu01-health` SNS topic (email) and the `nu01-monitor-errors` alarm. See [specs/monitor.md](../specs/monitor.md) |
+| [log-retention.yaml](log-retention.yaml) | `nu01-log-retention` | Caps every log group in the account to a 14-day retention, so log events older than two weeks are deleted: a Lambda function run daily by an EventBridge rule, and its log group (14 days). See [specs/log-retention.md](../specs/log-retention.md) |
 
 [scripts/deploy.sh](../scripts/deploy.sh) deploys `site.yaml`;
 [scripts/bootstrap.sh](../scripts/bootstrap.sh) deploys `github-deploy.yaml`
@@ -24,7 +25,7 @@ aws cloudformation deploy --region us-east-1 --stack-name nu01-github-deploy \
 Every stack is tagged for cost allocation, and CloudFormation copies the
 tags to its resources: `project=nu01`, and `tenancy=GA` (`nu01-web`), `RC`
 (`nu01-rc-web`) or `shared` (`nu01-github-deploy`, `nu01-route53-zone`, `nu01-route53-gmail`,
-`nu01-dns`, `nu01-monitor`).
+`nu01-dns`, `nu01-monitor`, `nu01-log-retention`).
 
 This repository owns the shared nu01 infrastructure: the `nu01.com` zone and
 mail records, the apps' records in it, and the monitor.
@@ -40,5 +41,8 @@ add an endpoint, add a line to the template's `Endpoints` parameter and run
 it again. It costs about $0 (Lambda, the schedule and one alarm fit in the
 free tiers), against about $24/month for the 14 Route 53 health checks it
 replaced.
+
+[scripts/deploy-log-retention.sh](../scripts/deploy-log-retention.sh)
+deploys `log-retention.yaml`, by hand, then runs it once.
 
 The site buckets are kept (`DeletionPolicy: Retain`) if a stack is deleted.
