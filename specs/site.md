@@ -58,7 +58,10 @@
   license in `site/assets/LICENSE-html5up.txt`, credit in the footer). Its
   CSS and JS are unchanged; nu01's changes are `site/assets/css/nu01.css`
   and `site/assets/js/nu01.js`. Its demo pictures aren't used.
-- `site/img/*.svg`: one illustration per article, drawn for this site (no
-  words in them, so they suit every language). Placeholders until real
-  screenshots or artwork replace them.
+- `site/img/*.svg`: one illustration per article, drawn for this site.
+  Placeholders until real screenshots or artwork replace them. They carry
+  no words, except presence's camera overlay: a LIVE badge and two
+  detection boxes, a person under a green PERSON tag and a sitting cat
+  under an amber PET tag, with both marked on the clip timeline below. These
+  English labels are the same in every language.
 - `site/images/bg-<hero>.jpg`: generated abstract backgrounds, one per hero.
