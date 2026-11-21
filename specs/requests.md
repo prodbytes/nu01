@@ -136,3 +136,14 @@ spec.
    report to timestamped files under `reports/costs/YYYY/MM/` (git-ignored).
    No AWS setup was needed: the `project` and `tenancy` cost allocation tags
    were already active and backfilled ([cost-report.md](cost-report.md)).
+
+## 2026-11-21
+
+1. **Show a pet as well as a person in presence's illustration.** The
+   `#presence` article's image (`site/img/presence.svg`) now has a person
+   standing in the green PERSON box (which was empty) and a sitting cat in
+   a new amber PET box, matching presence's `person` and `pet` tags, and
+   its timeline marks both. The landscape no longer spills below the
+   camera frame. The spec no longer claims the illustrations have no
+   words: presence's labels are English camera-overlay text
+   ([site.md](site.md)).
